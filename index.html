@@ -105,27 +105,96 @@ nav.scrolled .mobile-toggle span { background: var(--ink); }
 }
 .hero-bg {
   position: absolute; inset: 0;
-  background: linear-gradient(165deg, #0d1b2a 0%, #1b2d45 35%, #2d5f8a 100%);
+  background: linear-gradient(165deg, #060c16 0%, #0d1b2a 20%, #162d4a 50%, #1a3a5c 75%, #2d5f8a 100%);
 }
 .hero-bg::after {
   content: ''; position: absolute; inset: 0;
-  background: radial-gradient(ellipse at 30% 20%, rgba(184,134,11,0.08) 0%, transparent 60%),
-              radial-gradient(ellipse at 80% 80%, rgba(45,95,138,0.15) 0%, transparent 50%);
+  background: radial-gradient(ellipse at 25% 15%, rgba(184,134,11,0.12) 0%, transparent 50%),
+              radial-gradient(ellipse at 75% 75%, rgba(45,95,138,0.2) 0%, transparent 45%),
+              radial-gradient(circle at 50% 50%, rgba(184,134,11,0.04) 0%, transparent 70%);
 }
-/* Subtle grain texture */
+/* Grain texture */
 .hero-grain {
-  position: absolute; inset: 0; opacity: 0.03;
+  position: absolute; inset: 0; opacity: 0.035;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
-/* Geometric accent */
+/* Geometric cross pattern overlay */
+.hero-pattern {
+  position: absolute; inset: 0; opacity: 0.025;
+  background-image:
+    linear-gradient(rgba(184,134,11,0.3) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(184,134,11,0.3) 1px, transparent 1px);
+  background-size: 80px 80px;
+  mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+}
+/* Floating light orbs */
+.hero-orb {
+  position: absolute; border-radius: 50%;
+  filter: blur(60px); pointer-events: none;
+}
+.hero-orb-1 {
+  width: 400px; height: 400px; top: -10%; left: -5%;
+  background: radial-gradient(circle, rgba(184,134,11,0.08), transparent 70%);
+  animation: orbFloat1 12s ease-in-out infinite;
+}
+.hero-orb-2 {
+  width: 300px; height: 300px; bottom: -5%; right: -5%;
+  background: radial-gradient(circle, rgba(45,95,138,0.12), transparent 70%);
+  animation: orbFloat2 15s ease-in-out infinite;
+}
+.hero-orb-3 {
+  width: 200px; height: 200px; top: 40%; right: 15%;
+  background: radial-gradient(circle, rgba(184,134,11,0.05), transparent 70%);
+  animation: orbFloat3 10s ease-in-out infinite;
+}
+/* Decorative lines */
 .hero-line {
-  position: absolute; top: 50%; left: 5%; width: 1px; height: 120px;
-  background: linear-gradient(to bottom, transparent, rgba(184,134,11,0.3), transparent);
-  transform: translateY(-50%);
+  position: absolute; top: 15%; left: 6%; width: 1px; height: 180px;
+  background: linear-gradient(to bottom, transparent, rgba(184,134,11,0.25), transparent);
 }
 .hero-line-r {
-  position: absolute; top: 30%; right: 8%; width: 80px; height: 1px;
-  background: linear-gradient(to right, transparent, rgba(255,255,255,0.08), transparent);
+  position: absolute; bottom: 20%; right: 6%; width: 1px; height: 140px;
+  background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.06), transparent);
+}
+.hero-line-h1 {
+  position: absolute; top: 25%; right: 10%; width: 100px; height: 1px;
+  background: linear-gradient(to right, transparent, rgba(184,134,11,0.15), transparent);
+}
+.hero-line-h2 {
+  position: absolute; bottom: 30%; left: 8%; width: 80px; height: 1px;
+  background: linear-gradient(to right, transparent, rgba(255,255,255,0.05), transparent);
+}
+/* Corner accents */
+.hero-corner {
+  position: absolute; width: 60px; height: 60px; pointer-events: none;
+}
+.hero-corner-tl {
+  top: 5%; left: 4%;
+  border-top: 1px solid rgba(184,134,11,0.15);
+  border-left: 1px solid rgba(184,134,11,0.15);
+}
+.hero-corner-br {
+  bottom: 8%; right: 4%;
+  border-bottom: 1px solid rgba(184,134,11,0.1);
+  border-right: 1px solid rgba(184,134,11,0.1);
+}
+/* Small diamond decorations */
+.hero-diamond {
+  position: absolute; width: 8px; height: 8px;
+  border: 1px solid rgba(184,134,11,0.2);
+  transform: rotate(45deg); pointer-events: none;
+}
+.hero-diamond-1 { top: 20%; left: 12%; animation: diamondPulse 4s ease-in-out infinite; }
+.hero-diamond-2 { bottom: 25%; right: 12%; animation: diamondPulse 4s ease-in-out infinite 2s; }
+.hero-diamond-3 { top: 60%; left: 20%; width: 5px; height: 5px; animation: diamondPulse 5s ease-in-out infinite 1s; }
+
+/* Cross symbol watermark */
+.hero-cross {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  font-size: 20rem; color: rgba(184,134,11,0.015);
+  font-family: var(--serif); pointer-events: none;
+  line-height: 1;
 }
 
 .hero-content {
@@ -133,12 +202,20 @@ nav.scrolled .mobile-toggle span { background: var(--ink); }
   padding: 0 2rem; max-width: 900px;
 }
 
+/* Decorative line above badge */
+.hero-top-line {
+  width: 40px; height: 1px; background: var(--gold);
+  margin: 0 auto 2rem; opacity: 0;
+  animation: heroFade 1s 0.1s var(--ease) forwards;
+}
+
 /* Direct branch badge */
 .hero-badge {
   display: inline-flex; align-items: center; gap: 8px;
-  background: rgba(184,134,11,0.15); border: 1px solid rgba(184,134,11,0.3);
+  background: rgba(184,134,11,0.1); border: 1px solid rgba(184,134,11,0.25);
   padding: 8px 24px; border-radius: 100px;
   margin-bottom: 2.5rem;
+  backdrop-filter: blur(10px);
   opacity: 0; animation: heroFade 1s 0.2s var(--ease) forwards;
 }
 .hero-badge-dot {
@@ -157,16 +234,26 @@ nav.scrolled .mobile-toggle span { background: var(--ink); }
   line-height: 1.35; letter-spacing: -0.02em;
   margin-bottom: 1.5rem;
   white-space: nowrap;
+  text-shadow: 0 4px 40px rgba(0,0,0,0.3);
   opacity: 0; animation: heroFade 1s 0.5s var(--ease) forwards;
 }
 .hero-title em {
   font-style: italic; color: var(--gold-light);
 }
 
+/* Decorative separator */
+.hero-sep {
+  display: flex; align-items: center; justify-content: center; gap: 16px;
+  margin-bottom: 1.5rem;
+  opacity: 0; animation: heroFade 1s 0.7s var(--ease) forwards;
+}
+.hero-sep-line { width: 40px; height: 1px; background: rgba(184,134,11,0.3); }
+.hero-sep-diamond { width: 6px; height: 6px; border: 1px solid rgba(184,134,11,0.4); transform: rotate(45deg); }
+
 .hero-verse {
   font-family: var(--serif);
   font-size: 1.05rem; font-style: italic;
-  color: rgba(255,255,255,0.5);
+  color: rgba(255,255,255,0.45);
   margin-bottom: 3rem;
   opacity: 0; animation: heroFade 1s 0.8s var(--ease) forwards;
 }
@@ -182,27 +269,32 @@ nav.scrolled .mobile-toggle span { background: var(--ink); }
   display: inline-flex; align-items: center; gap: 8px; border: none; cursor: pointer;
 }
 .btn-gold {
-  background: var(--gold); color: white;
-  box-shadow: 0 2px 20px rgba(184,134,11,0.25);
+  background: linear-gradient(135deg, var(--gold), #a07608); color: white;
+  box-shadow: 0 2px 20px rgba(184,134,11,0.3), inset 0 1px 0 rgba(255,255,255,0.1);
 }
-.btn-gold:hover { background: #a07608; transform: translateY(-2px); box-shadow: 0 6px 30px rgba(184,134,11,0.35); }
+.btn-gold:hover { background: linear-gradient(135deg, #a07608, #8a6507); transform: translateY(-2px); box-shadow: 0 6px 30px rgba(184,134,11,0.4); }
 .btn-ghost {
-  background: transparent; color: rgba(255,255,255,0.7);
-  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.7);
+  border: 1px solid rgba(255,255,255,0.15);
+  backdrop-filter: blur(10px);
 }
-.btn-ghost:hover { color: white; border-color: rgba(255,255,255,0.5); background: rgba(255,255,255,0.05); }
+.btn-ghost:hover { color: white; border-color: rgba(255,255,255,0.4); background: rgba(255,255,255,0.08); }
 
 .hero-scroll {
   position: absolute; bottom: 3rem; left: 50%; transform: translateX(-50%);
   z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 8px;
   opacity: 0; animation: heroFade 1s 1.3s var(--ease) forwards;
 }
-.hero-scroll span { font-size: 0.65rem; color: rgba(255,255,255,0.3); letter-spacing: 0.15em; text-transform: uppercase; }
-.hero-scroll-line { width: 1px; height: 40px; background: linear-gradient(to bottom, rgba(255,255,255,0.2), transparent); animation: scrollPulse 2s ease-in-out infinite; }
+.hero-scroll span { font-size: 0.65rem; color: rgba(255,255,255,0.25); letter-spacing: 0.2em; text-transform: uppercase; }
+.hero-scroll-line { width: 1px; height: 40px; background: linear-gradient(to bottom, rgba(184,134,11,0.3), transparent); animation: scrollPulse 2s ease-in-out infinite; }
 
 @keyframes heroFade { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes badgePulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
 @keyframes scrollPulse { 0%,100% { opacity: 0.3; } 50% { opacity: 0.8; } }
+@keyframes orbFloat1 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(30px, 20px); } }
+@keyframes orbFloat2 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(-20px, -30px); } }
+@keyframes orbFloat3 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(-15px, 25px); } }
+@keyframes diamondPulse { 0%,100% { opacity: 0.3; } 50% { opacity: 0.8; } }
 
 /* ===== BRANCH BANNER ===== */
 .branch-banner {
@@ -328,35 +420,53 @@ section { padding: 7rem 2rem; }
 }
 
 /* ===== VISION ===== */
-#vision { background: var(--white); }
+#vision { background: var(--ink-90); padding: 7rem 2rem; }
+#vision .sec-label { color: var(--gold-light); }
+#vision .sec-title { color: white; }
+#vision .sec-desc { color: rgba(255,255,255,0.4); }
 .vision-grid {
   display: grid; grid-template-columns: repeat(4, 1fr);
   gap: 1.5rem; margin-top: 3.5rem;
 }
 .vision-card {
   padding: 2.5rem 1.8rem;
-  border-radius: 16px; border: 1px solid var(--ink-07);
-  background: var(--cream);
+  border-radius: 16px;
+  background: linear-gradient(160deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+  border: 1px solid rgba(255,255,255,0.08);
   transition: all 0.4s var(--ease);
   position: relative;
+  overflow: hidden;
+}
+.vision-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 100%;
+  background: radial-gradient(ellipse at top left, rgba(184,134,11,0.06), transparent 60%);
+  pointer-events: none;
 }
 .vision-card:hover {
-  border-color: var(--gold);
-  box-shadow: 0 8px 40px rgba(0,0,0,0.04);
+  border-color: rgba(184,134,11,0.4);
+  box-shadow: 0 8px 40px rgba(0,0,0,0.2);
   transform: translateY(-4px);
+  background: linear-gradient(160deg, rgba(255,255,255,0.09), rgba(255,255,255,0.03));
+}
+.vision-card .v-icon {
+  width: 52px; height: 52px; border-radius: 14px;
+  background: linear-gradient(135deg, rgba(184,134,11,0.2), rgba(184,134,11,0.05));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem; margin-bottom: 1.2rem;
+  border: 1px solid rgba(184,134,11,0.15);
 }
 .vision-card .v-num {
   font-family: var(--serif);
-  font-size: 2.5rem; font-weight: 700;
-  color: var(--ink-07); margin-bottom: 1rem;
-  line-height: 1;
+  font-size: 0.75rem; font-weight: 600;
+  color: var(--gold); margin-bottom: 1rem;
+  letter-spacing: 0.15em;
 }
 .vision-card h3 {
-  font-size: 0.95rem; font-weight: 700;
-  color: var(--ink); margin-bottom: 0.8rem;
+  font-size: 1.05rem; font-weight: 700;
+  color: white; margin-bottom: 0.8rem;
 }
 .vision-card p {
-  font-size: 0.85rem; color: var(--ink-50); line-height: 1.7;
+  font-size: 0.85rem; color: rgba(255,255,255,0.45); line-height: 1.7;
 }
 .vision-card .v-accent {
   position: absolute; top: 0; left: 2rem; right: 2rem;
@@ -551,7 +661,7 @@ footer p { font-size: 0.8rem; margin-bottom: 4px; }
   .mobile-toggle { display: block; }
   section { padding: 5rem 1.5rem; }
   .about-grid, .pastor-grid, .newcomer-grid, .location-layout { grid-template-columns: 1fr; gap: 2.5rem; }
-  .vision-grid { grid-template-columns: 1fr; }
+  .vision-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
   .goals-grid { grid-template-columns: 1fr; }
   .prayer-main { grid-template-columns: 1fr; }
   .worship-img-card { grid-template-columns: 1fr; }
@@ -591,9 +701,27 @@ footer p { font-size: 0.8rem; margin-bottom: 4px; }
 <section class="hero">
   <div class="hero-bg"></div>
   <div class="hero-grain"></div>
+  <div class="hero-pattern"></div>
+  <div class="hero-cross">✞</div>
+  <!-- Floating orbs -->
+  <div class="hero-orb hero-orb-1"></div>
+  <div class="hero-orb hero-orb-2"></div>
+  <div class="hero-orb hero-orb-3"></div>
+  <!-- Geometric lines -->
   <div class="hero-line"></div>
   <div class="hero-line-r"></div>
+  <div class="hero-line-h1"></div>
+  <div class="hero-line-h2"></div>
+  <!-- Corner accents -->
+  <div class="hero-corner hero-corner-tl"></div>
+  <div class="hero-corner hero-corner-br"></div>
+  <!-- Diamonds -->
+  <div class="hero-diamond hero-diamond-1"></div>
+  <div class="hero-diamond hero-diamond-2"></div>
+  <div class="hero-diamond hero-diamond-3"></div>
+  <!-- Content -->
   <div class="hero-content">
+    <div class="hero-top-line"></div>
     <div class="hero-badge">
       <div class="hero-badge-dot"></div>
       <span>여의도순복음교회 직할성전</span>
@@ -602,6 +730,11 @@ footer p { font-size: 0.8rem; margin-bottom: 4px; }
       "하나님을 <span style="color:var(--gold-light)">영화롭게</span>"<br>
       "사람을 <span style="color:var(--gold-light)">행복</span>하게"
     </h1>
+    <div class="hero-sep">
+      <div class="hero-sep-line"></div>
+      <div class="hero-sep-diamond"></div>
+      <div class="hero-sep-line"></div>
+    </div>
     <p class="hero-verse">오직 십자가의 능력으로 — 고린도전서 1:18</p>
     <div class="hero-actions">
       <a href="#worship" class="btn btn-gold">예배시간 안내</a>
@@ -686,26 +819,26 @@ footer p { font-size: 0.8rem; margin-bottom: 4px; }
     <p class="sec-desc reveal">예배, 치유, 나눔, 선교의 네 기둥 위에 세워져 갑니다.</p>
     <div class="vision-grid">
       <div class="vision-card reveal">
-        <div class="v-accent" style="background:var(--accent-light);"></div>
-        <div class="v-num">01</div>
+        <div class="v-icon">🙏</div>
+        <div class="v-num">WORSHIP</div>
         <h3>예배공동체</h3>
         <p>구원의 기쁨과 감사의 기도와 찬양의 감격이 넘치는 공동체</p>
       </div>
       <div class="vision-card reveal">
-        <div class="v-accent" style="background:var(--gold);"></div>
-        <div class="v-num">02</div>
+        <div class="v-icon">💛</div>
+        <div class="v-num">HEALING</div>
         <h3>치유공동체</h3>
         <p>영혼육의 전인치료와 상한 마음이 회복되는 공동체</p>
       </div>
       <div class="vision-card reveal">
-        <div class="v-accent" style="background:#3a8a5c;"></div>
-        <div class="v-num">03</div>
+        <div class="v-icon">🤝</div>
+        <div class="v-num">SHARING</div>
         <h3>나눔공동체</h3>
         <p>교회를 세우고 세상을 섬기며 이웃사랑을 실천하는 공동체</p>
       </div>
       <div class="vision-card reveal">
-        <div class="v-accent" style="background:#8a3a3a;"></div>
-        <div class="v-num">04</div>
+        <div class="v-icon">🌍</div>
+        <div class="v-num">MISSION</div>
         <h3>선교공동체</h3>
         <p>증인되어 온 천하에 다니며 그리스도의 복음을 전하는 공동체</p>
       </div>
