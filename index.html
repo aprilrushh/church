@@ -2,10 +2,11 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="여의도순복음춘천교회 - 여의도순복음교회 직할성전. 춘천시 동내면 동내로 17. 하나님을 영화롭게, 사람을 행복하게!">
-<meta name="keywords" content="춘천교회, 춘천시교회, 순복음교회, 여의도순복음춘천교회, 여의도순복음교회 직할성전, 춘천예배, 동내면교회">
-<title>여의도순복음춘천교회 | 여의도순복음교회 직할성전</title>
+<meta name="description" content="여의도순복음춘천교회 - 여의도순복음교회 독립지교회. 춘천시 동내면 동내로 17. 하나님을 영화롭게, 사람을 행복하게!">
+<meta name="keywords" content="춘천교회, 춘천시교회, 순복음교회, 여의도순복음춘천교회, 여의도순복음교회 독립지교회, 춘천예배, 동내면교회">
+<title>여의도순복음춘천교회 | 여의도순복음교회 독립지교회</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Pretendard:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -116,7 +117,7 @@ nav.scrolled .mobile-toggle span { background: var(--ink); }
 /* Grain texture */
 .hero-grain {
   position: absolute; inset: 0; opacity: 0.035;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='https://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 /* Geometric cross pattern overlay */
 .hero-pattern {
@@ -492,7 +493,7 @@ section { padding: 7rem 2rem; }
 }
 .w-row:not(:last-child) { border-bottom: 1px solid var(--ink-07); }
 .w-name { font-size: 0.9rem; font-weight: 500; color: var(--ink-70); }
-.w-time { font-size: 0.9rem; font-weight: 600; color: var(--ink); font-variant-numeric: tabular-nums; }
+.w-time { font-size: 0.9rem; font-weight: 600; color: var(--ink); font-variant-numeric: tabular-nums; white-space: nowrap; }
 .w-note { font-size: 0.75rem; color: var(--ink-30); margin-left: 6px; }
 
 .worship-img-card {
@@ -676,10 +677,13 @@ footer p { font-size: 0.8rem; margin-bottom: 4px; }
 <nav id="navbar" class="at-top">
   <div class="nav-inner">
     <a href="#" class="nav-logo" onclick="event.preventDefault(); window.scrollTo({top:0,behavior:'smooth'})">
-      <span class="nav-logo-cross">✞</span>
-      <div>
-        여의도순복음춘천교회
-        <span class="nav-logo-sub">YOIDO FULL GOSPEL CHUNCHEON</span>
+      <img src="images/logo.png" alt="여의도순복음춘천교회" style="height:40px; width:auto;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+      <div style="display:none; align-items:center; gap:10px;">
+        <span class="nav-logo-cross">✞</span>
+        <div>
+          여의도순복음춘천교회
+          <span class="nav-logo-sub">YOIDO FULL GOSPEL CHUNCHEON</span>
+        </div>
       </div>
     </a>
     <ul class="nav-links" id="navLinks">
@@ -724,7 +728,7 @@ footer p { font-size: 0.8rem; margin-bottom: 4px; }
     <div class="hero-top-line"></div>
     <div class="hero-badge">
       <div class="hero-badge-dot"></div>
-      <span>여의도순복음교회 직할성전</span>
+      <span>여의도순복음교회 독립지교회</span>
     </div>
     <h1 class="hero-title">
       "하나님을 <span style="color:var(--gold-light)">영화롭게</span>"<br>
@@ -736,6 +740,7 @@ footer p { font-size: 0.8rem; margin-bottom: 4px; }
       <div class="hero-sep-line"></div>
     </div>
     <p class="hero-verse">오직 십자가의 능력으로 — 고린도전서 1:18</p>
+    <p style="color:var(--gold-light); font-size:0.9rem; font-weight:600; margin-bottom:2.5rem; opacity:0; animation:heroFade 1s 0.9s var(--ease) forwards;">2026년 비전 &nbsp;성령으로 변화되는 삶</p>
     <div class="hero-actions">
       <a href="#worship" class="btn btn-gold">예배시간 안내</a>
       <a href="#location" class="btn btn-ghost">오시는 길</a>
@@ -750,11 +755,11 @@ footer p { font-size: 0.8rem; margin-bottom: 4px; }
 <!-- BRANCH BANNER -->
 <div class="branch-banner">
   <div class="branch-inner reveal">
-    <p class="branch-label">여의도순복음교회 직할성전</p>
+    <p class="branch-label">여의도순복음교회 독립지교회</p>
     <h2 class="branch-title">
       여의도순복음춘천교회는<br>
-      세계 최대 교회 <strong>여의도순복음교회의 직할성전</strong>으로서<br>
-      동일한 신앙과 비전 위에 세워진 교회입니다.
+      세계 최대 교회 <strong>여의도순복음교회의 독립지교회</strong>로서<br>
+      동일한 신앙적 교리와 비전 위에 세워진 교회입니다.
     </h2>
     <p class="branch-desc">
       1958년 창립된 여의도순복음교회의 전통과 성령 충만한 신앙을 이어받아,<br>
@@ -778,10 +783,10 @@ footer p { font-size: 0.8rem; margin-bottom: 4px; }
       </div>
       <div class="about-text reveal">
         <span style="display:inline-block; background:var(--gold-pale); color:var(--gold); padding:5px 16px; border-radius:100px; font-size:0.75rem; font-weight:600; margin-bottom:1.5rem;">
-          ✞ 2026 비전 — 성경으로 변화되는 삶
+          ✞ 2026 비전 — 성령으로 변화되는 삶
         </span>
         <h3>2009년 창립 이래,<br>춘천에서 복음을 전합니다</h3>
-        <p>여의도순복음춘천교회는 2009년 9월 11일 창립 이래, 여의도순복음교회 직할성전으로서 춘천 지역에서 하나님의 사랑을 전하며 성장해 온 교회입니다.</p>
+        <p>여의도순복음춘천교회는 2009년 9월 11일 창립 이래, 여의도순복음교회 독립지교회로서 춘천 지역에서 하나님의 사랑을 전하며 성장해 온 교회입니다.</p>
         <p>말씀과 성령의 능력으로 지역사회를 섬기며, 모든 세대가 함께 예배하고 성장하는 공동체를 이루어가고 있습니다.</p>
         <p>처음 오시는 분도 편안하게 예배에 참여하실 수 있습니다.</p>
         <div class="about-verse">
@@ -882,7 +887,7 @@ footer p { font-size: 0.8rem; margin-bottom: 4px; }
         <img src="images/5.jpeg" alt="유치부 활동 모습" style="width:100%; height:200px; object-fit:cover; border-radius:16px; margin-bottom:1.5rem;">
         <div class="worship-cta">
           <h4>처음 오시나요?</h4>
-          <p>춘천에서 교회를 찾고 계신다면 편하게 방문해 주세요. 따뜻하게 맞이하겠습니다.</p>
+          <p>춘천에서 교회를 찾고 계신다면 편하게 방문해 주세요.<br>따뜻하게 맞이하겠습니다.</p>
           <div class="cta-info">
             <div class="cta-row"><span class="cta-icon">📍</span> 춘천시 동내면 동내로 17</div>
             <div class="cta-row"><span class="cta-icon">📞</span> 033) 264-5111</div>
@@ -1014,7 +1019,7 @@ footer p { font-size: 0.8rem; margin-bottom: 4px; }
   <div class="container">
     <div class="footer-logo">✞ 여의도순복음춘천교회</div>
     <div class="footer-eng">YOIDO FULL GOSPEL CHUNCHEON CHURCH</div>
-    <p>여의도순복음교회 직할성전</p>
+    <p>여의도순복음교회 독립지교회</p>
     <p>강원도 춘천시 동내면 동내로 17 &nbsp;|&nbsp; ☎ 033) 264-5111, 5116~7</p>
     <div class="footer-copy">© 2026 여의도순복음춘천교회. All rights reserved.</div>
   </div>
