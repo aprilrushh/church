@@ -74,9 +74,7 @@ nav.scrolled {
   display: flex; align-items: center; gap: 10px;
 }
 nav.at-top .nav-logo { color: white; }
-nav.at-top .nav-logo img { filter: brightness(0) invert(1); }
 nav.scrolled .nav-logo { color: var(--ink); }
-nav.scrolled .nav-logo img { filter: none; }
 .nav-logo-cross {
   font-size: 1.1rem; opacity: 0.6;
 }
@@ -680,13 +678,10 @@ footer p { font-size: 0.8rem; margin-bottom: 4px; }
 <nav id="navbar" class="at-top">
   <div class="nav-inner">
     <a href="#" class="nav-logo" onclick="event.preventDefault(); window.scrollTo({top:0,behavior:'smooth'})">
-      <img src="images/logo.png" alt="여의도순복음춘천교회" style="height:36px; width:auto; filter:brightness(0) invert(1);" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-      <div style="display:none; align-items:center; gap:10px;">
-        <span class="nav-logo-cross">✞</span>
-        <div>
-          여의도순복음춘천교회
-          <span class="nav-logo-sub">YOIDO FULL GOSPEL CHUNCHEON</span>
-        </div>
+      <span class="nav-logo-cross">✞</span>
+      <div>
+        여의도순복음춘천교회
+        <span class="nav-logo-sub">YOIDO FULL GOSPEL CHUNCHEON</span>
       </div>
     </a>
     <ul class="nav-links" id="navLinks">
