@@ -5,16 +5,16 @@
   <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>여의도순복음춘천교회 | 춘천 교회 · 주일예배 · 새가족 환영</title>
-  <meta name="description" content="춘천에서 교회를 찾고 계신가요? 여의도순복음춘천교회는 강원도 춘천시 동내면 동내로 17에 위치한 교회로, 주일예배·새가족 안내·유초등부·중고등부·청년부 예배를 제공합니다.">
-  <meta name="keywords" content="춘천교회, 춘천 교회, 춘천시교회, 춘천 새가족 교회, 춘천 주일예배, 동내면교회, 석사동교회, 퇴계동교회, 춘천 청년부 교회, 춘천 유초등부 교회, 순복음교회, 여의도순복음춘천교회">
+  <title>여의도순복음춘천교회 | 춘천 교회 · 주일예배 · 여행 중 예배</title>
+  <meta name="description" content="춘천에서 교회를 찾고 계신가요? 춘천시 동내면 동내로 17. 주일예배 오전 9시·11시·오후 1시. 춘천에 여행 오신 분도 여행 차림 그대로 편안하게 예배드릴 수 있습니다. 남춘천역에서 차로 약 10분.">
+  <meta name="keywords" content="춘천교회, 춘천 교회, 춘천 주일예배, 춘천 예배, 춘천 여행 교회, 여행중 주일예배, 춘천 방문 교회, 춘천 교회 예배시간, 춘천 새가족 교회, 동내면교회, 석사동교회, 퇴계동교회, 춘천 청년부 교회, 순복음교회, 여의도순복음춘천교회">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://www.chunchurch.com/">
 
   <meta property="og:type" content="website">
   <meta property="og:locale" content="ko_KR">
-  <meta property="og:title" content="여의도순복음춘천교회 | 춘천 교회 · 주일예배 · 새가족 환영">
-  <meta property="og:description" content="춘천시 동내면 동내로 17. 처음 오시는 분도 편안하게 예배드릴 수 있도록 따뜻하게 맞이합니다.">
+  <meta property="og:title" content="여의도순복음춘천교회 | 낯선 도시에서 드리는 예배의 낭만">
+  <meta property="og:description" content="춘천시 동내면 동내로 17. 주일예배 9시·11시·오후 1시. 여행 중이신 분도, 처음 오시는 분도 그대로 환영합니다.">
   <meta property="og:url" content="https://www.chunchurch.com/">
   <meta property="og:image" content="https://www.chunchurch.com/images/1.jpeg">
   <meta name="twitter:card" content="summary_large_image">
@@ -284,6 +284,16 @@
       margin:0 auto 56px;
       letter-spacing:-.005em;
       line-height:1.6;
+    }
+    .hero-travel{
+      text-align:center;
+      font-size:clamp(13px,1.3vw,15px);
+      color:var(--gold-glow);
+      letter-spacing:.04em;
+      font-weight:300;
+      margin:-34px auto 56px;
+      max-width:560px;
+      opacity:.92;
     }
     .hero-tag::before,.hero-tag::after{
       content:'';
@@ -1101,7 +1111,7 @@
     .reveal.delay-2{transition-delay:.24s}
     .reveal.delay-3{transition-delay:.36s}
 
-    .hero-meta,.hero-name,.hero-eng,.hero-tag{
+    .hero-meta,.hero-name,.hero-eng,.hero-tag,.hero-travel{
       opacity:0;
       animation:hero-rise 1.1s cubic-bezier(.2,.6,.2,1) forwards;
     }
@@ -1109,6 +1119,7 @@
     .hero-name{animation-delay:.4s}
     .hero-eng{animation-delay:.7s}
     .hero-tag{animation-delay:.9s}
+    .hero-travel{animation-delay:1.05s}
     @keyframes hero-rise{
       from{opacity:0;transform:translateY(28px)}
       to{opacity:1;transform:translateY(0)}
@@ -1150,6 +1161,64 @@
         transition-duration:.01ms!important;
       }
       .reveal{opacity:1;transform:none}
+    }
+
+    /* ---- Travelers section ---- */
+    .travel{
+      background:linear-gradient(180deg,var(--navy-deep) 0%,var(--navy) 100%);
+      color:#f3eee2;position:relative;overflow:hidden;
+    }
+    .travel::before{
+      content:"";position:absolute;inset:0;
+      background:radial-gradient(1200px 500px at 15% 0%,rgba(236,212,133,.10),transparent 60%);
+      pointer-events:none;
+    }
+    .travel .sec-num{color:var(--gold-glow)}
+    .travel .sec-title{color:#fff}
+    .travel .sec-sub{color:rgba(243,238,226,.78)}
+    .travel-lead{
+      max-width:760px;margin:0 auto 64px;text-align:center;
+      font-size:1.08rem;line-height:2.1;color:rgba(243,238,226,.86);
+      font-weight:300;letter-spacing:-.01em;
+    }
+    .travel-lead em{font-style:normal;color:var(--gold-glow)}
+    .travel-grid{
+      display:grid;grid-template-columns:repeat(2,1fr);gap:1px;
+      background:rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.10);border-radius:2px;overflow:hidden;
+    }
+    .travel-card{
+      background:rgba(12,31,51,.72);padding:48px 42px;transition:background .35s ease;
+    }
+    .travel-card:hover{background:rgba(28,58,92,.85)}
+    .travel-card .tc-num{
+      display:block;font-size:.72rem;letter-spacing:.22em;
+      color:var(--gold-glow);margin-bottom:18px;font-weight:500;
+    }
+    .travel-card h3{
+      font-size:1.22rem;color:#fff;margin:0 0 14px;
+      font-weight:600;letter-spacing:-.02em;
+    }
+    .travel-card p{
+      font-size:.96rem;line-height:1.95;color:rgba(243,238,226,.74);
+      margin:0;font-weight:300;
+    }
+    .travel-note{
+      margin-top:56px;padding:34px 40px;text-align:center;
+      border:1px solid rgba(236,212,133,.28);border-radius:2px;
+      background:rgba(236,212,133,.05);
+    }
+    .travel-note strong{
+      display:block;color:var(--gold-glow);font-size:1.05rem;
+      font-weight:600;margin-bottom:12px;letter-spacing:-.01em;
+    }
+    .travel-note p{margin:0;color:rgba(243,238,226,.80);font-size:.96rem;line-height:1.9;font-weight:300}
+    .travel-note a{color:#fff;border-bottom:1px solid rgba(236,212,133,.5);text-decoration:none}
+    .travel-note a:hover{color:var(--gold-glow)}
+    @media(max-width:860px){
+      .travel-grid{grid-template-columns:1fr}
+      .travel-card{padding:38px 28px}
+      .travel-lead{margin-bottom:44px;font-size:1rem}
     }
   </style>
 
@@ -1217,6 +1286,7 @@
         <a href="#pastor">담임목사</a>
         <a href="#vision">비전</a>
         <a href="#visit">처음 방문</a>
+        <a href="#travel">춘천 여행</a>
         <a href="#location">오시는 길</a>
       </div>
       <a href="tel:0332645111" class="nav-cta">033-264-5111</a>
@@ -1236,6 +1306,8 @@
       <p class="hero-eng">Yoido Full Gospel Chuncheon Church</p>
 
       <p class="hero-tag">하나님을 영화롭게, 사람을 행복하게</p>
+
+      <p class="hero-travel">춘천을 찾은 당신에게도 열려 있는 자리입니다</p>
     </div>
   </header>
 
@@ -1451,7 +1523,7 @@
       <div class="sec-head reveal">
         <div class="sec-num">For New Visitors</div>
         <h2 class="sec-title">처음 오셔도<br>편안하게 예배드릴 수 있습니다</h2>
-        <p class="sec-sub">검색으로 교회를 찾는 분들이 가장 궁금해하시는 정보를 한곳에 정리했습니다</p>
+        <p class="sec-sub">춘천에 사시는 분도, 잠시 머무시는 분도 똑같이 환영합니다</p>
       </div>
 
       <div class="visit-grid">
@@ -1470,6 +1542,54 @@
           <h3>춘천 동내면에 있습니다</h3>
           <p>강원도 춘천시 동내면 동내로 17. 네이버 지도와 구글 지도로 길찾기가 가능합니다.</p>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section travel" id="travel">
+    <div class="container">
+      <div class="sec-head reveal">
+        <div class="sec-num">For Travelers</div>
+        <h2 class="sec-title">낯선 도시에서<br>드리는 예배의 낭만</h2>
+        <p class="sec-sub">춘천으로 여행 오신 분들을 환영합니다</p>
+      </div>
+
+      <p class="travel-lead reveal">
+        소양강에 안개가 걷히는 주일 아침, 처음 보는 사람들 사이에 앉아 드리는 예배가 있습니다.
+        아는 얼굴은 없지만 부르는 찬송은 같고, 낯선 도시의 공기 속에서 드리는 기도는 유난히 깊어집니다.
+        <em>여행의 가장 조용한 한 시간</em>을 저희와 함께 보내지 않으시겠습니까.
+      </p>
+
+      <div class="travel-grid">
+        <div class="travel-card reveal">
+          <span class="tc-num">01</span>
+          <h3>주일 아침, 예배로 여는 여행</h3>
+          <p>주일예배는 오전 9시, 오전 11시, 오후 1시 세 번 드립니다. 여행 일정에 맞춰 편한 시간에 오시면 됩니다. 아무에게도 말을 걸지 않고 조용히 앉았다 가셔도 괜찮습니다.</p>
+        </div>
+        <div class="travel-card reveal delay-1">
+          <span class="tc-num">02</span>
+          <h3>여행 차림 그대로 오세요</h3>
+          <p>격식은 필요하지 않습니다. 운동화에 배낭 차림이어도, 전날 밤 늦게 도착해 피곤한 얼굴이어도 그대로 환영합니다. 주차 공간은 넉넉합니다.</p>
+        </div>
+        <div class="travel-card reveal delay-2">
+          <span class="tc-num">03</span>
+          <h3>남춘천역에서 차로 약 10분</h3>
+          <p>춘천시 동내면 동내로 17. 소양강과 김유정문학촌으로 향하는 길목에 있어, 예배를 드린 뒤 바로 여행을 이어가실 수 있습니다.</p>
+        </div>
+        <div class="travel-card reveal delay-3">
+          <span class="tc-num">04</span>
+          <h3>춘천이 처음이시라면</h3>
+          <p>이 도시에서 어디를 가면 좋을지, 무엇을 먹으면 좋을지 물어보셔도 됩니다. 춘천에서 오래 살아온 사람들이 기쁘게 알려드립니다.</p>
+        </div>
+      </div>
+
+      <div class="travel-note reveal">
+        <strong>여행 중 예배 문의</strong>
+        <p>
+          강원특별자치도 춘천시 동내면 동내로 17 &nbsp;·&nbsp;
+          <a href="tel:0332645111">033-264-5111</a><br>
+          주일 아침에 그냥 오셔도 됩니다. 미리 연락 주시면 더 반갑게 맞이하겠습니다.
+        </p>
       </div>
     </div>
   </section>
@@ -1524,6 +1644,13 @@
             <span class="faq-toggle"></span>
           </button>
           <div class="faq-a">특별한 준비물은 없습니다. 편안한 복장으로 마음만 가지고 오시면 됩니다.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button">
+            <span class="faq-q-text"><span class="faq-q-num">07</span>춘천 여행 중인데 주일예배만 드리고 가도 될까요?</span>
+            <span class="faq-toggle"></span>
+          </button>
+          <div class="faq-a">물론입니다. 여행 중에 들르시는 분들을 자주 만납니다. 여행 차림 그대로 오셔서 예배만 드리고 가셔도 괜찮고, 주차 공간도 넉넉합니다. 남춘천역에서 차로 약 10분 거리입니다.</div>
         </div>
       </div>
     </div>
