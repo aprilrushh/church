@@ -1232,6 +1232,14 @@
     .policy h2{font-size:20px;margin:34px 0 10px}
     .policy p,.policy li{line-height:1.85}
     .policy ul{padding-left:20px}
+    .nav-toggle{display:none;background:none;border:0;width:42px;height:42px;cursor:pointer;margin-left:10px;color:var(--ink);font-size:24px;line-height:1}
+    @media(max-width:980px){
+      .nav-toggle{display:block}
+      .nav-cta{white-space:nowrap}
+      .nav.open .links{display:flex;flex-direction:column;position:absolute;top:100%;left:0;right:0;background:var(--paper);padding:8px 22px 18px;gap:0;box-shadow:0 12px 24px rgba(0,0,0,.12)}
+      .nav.open .links a{padding:14px 0;border-bottom:1px solid rgba(0,0,0,.07);font-size:16px}
+      .nav.open .links a::after{display:none}
+    }
 </style>
 
   <script type="application/ld+json">
@@ -1304,6 +1312,7 @@
         <a href="/en/" lang="en">English</a>
       </div>
       <a href="tel:0332645111" class="nav-cta">033-264-5111</a>
+      <button class="nav-toggle" aria-label="메뉴 열기" aria-expanded="false">☰</button>
     </div>
   </nav>
 
@@ -1421,6 +1430,9 @@
       else nav.style.boxShadow = 'none';
     };
     window.addEventListener('scroll',onScroll,{passive:true});
+    var tg=document.querySelector('.nav-toggle');
+    if(tg){tg.addEventListener('click',function(){var o=nav.classList.toggle('open');tg.textContent=o?'✕':'☰';tg.setAttribute('aria-expanded',o)});
+      document.querySelectorAll('.links a').forEach(function(a){a.addEventListener('click',function(){nav.classList.remove('open');tg.textContent='☰'})});}
     onScroll();
   </script>
 </body>
