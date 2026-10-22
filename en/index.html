@@ -14,7 +14,14 @@
 <link rel="icon" href="/images/logo.png">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18219820392"></script>
-<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','AW-18219820392');</script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config', 'AW-18219820392');
+    gtag('config', 'AW-18531482947');
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]'); if(!a) return;
+      var h = a.getAttribute('href') || '';
+      if (h.indexOf('tel:') === 0) gtag('event', 'conversion', {'send_to': 'AW-18531482947/Th9ACIuag6YdEMP6v4RF'});
+      else if (/naver\.me|map\.naver|google\.com\/maps|maps\.google/.test(h)) gtag('event', 'conversion', {'send_to': 'AW-18531482947/uSM4CI6ag6YdEMP6v4RF'});
+    }, true);</script>
 <style>
 :root{--ink:#1a1612;--paper:#faf5e9;--gold:#a87a32;--navy:#1c3a5c;--navy-deep:#0c1f33;--muted:#7a7165;--sans:"Pretendard Variable",Pretendard,-apple-system,system-ui,sans-serif}
 *{box-sizing:border-box;margin:0;padding:0}
