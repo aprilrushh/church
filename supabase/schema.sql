@@ -102,7 +102,7 @@ alter table public.guestbook enable row level security;
 
 -- memorials
 drop policy if exists m_select on public.memorials;
-create policy m_select on public.memorials for select using (public.can_view(id));
+create policy m_select on public.memorials for select using (owner_id = auth.uid() or public.can_view(id));
 drop policy if exists m_insert on public.memorials;
 create policy m_insert on public.memorials for insert with check (owner_id = auth.uid());
 drop policy if exists m_update on public.memorials;
