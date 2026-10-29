@@ -5,6 +5,7 @@ module.exports = (req, res) => {
   res.end(JSON.stringify({
     supabaseUrl: process.env.SUPABASE_URL || '',
     supabaseAnonKey: process.env.SUPABASE_ANON_KEY || '',
-    aiEnabled: !!(process.env.ANTHROPIC_API_KEY && process.env.OPENAI_API_KEY)
+    aiEnabled: !!process.env.ANTHROPIC_API_KEY,
+    sttEnabled: !!process.env.OPENAI_API_KEY
   }));
 };

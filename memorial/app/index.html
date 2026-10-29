@@ -200,7 +200,7 @@ async function tabRec(m){
     const {error}=await sb.storage.from('memorial-media').upload(p,blob,{contentType:blob.type||'audio/webm'});if(error)return toast('업로드 실패: '+error.message);
     const {data:row,error:e2}=await sb.from('recordings').insert({memorial_id:m.id,question:q,audio_path:p,duration_sec:dur||null}).select().single();if(e2)return toast(e2.message);
     toast('녹음을 저장했습니다.');
-    if(cfg.aiEnabled){try{toast('받아쓰는 중…');await api('transcribe',{recording_id:row.id});toast('받아쓰기를 마쳤습니다.')}catch(e){toast(e.message)}}
+    if(cfg.sttEnabled){try{toast('받아쓰는 중…');await api('transcribe',{recording_id:row.id});toast('받아쓰기를 마쳤습니다.')}catch(e){toast(e.message)}}
     tabRec(m);
   }
   $('#recBtn').onclick=async()=>{
@@ -221,7 +221,7 @@ async function tabRec(m){
     d.innerHTML=`<div class="row" style="justify-content:space-between"><b>${esc(r.question)}</b><span class="pill ${r.transcript?'ok':''}">${r.transcript?'받아쓰기 완료':'받아쓰기 전'}</span></div>
       <audio controls preload="none" src="${esc(url)}"></audio>
       <label>받아쓴 내용 (틀린 글자는 고쳐 주세요)</label><textarea>${esc(r.transcript)}</textarea>
-      <div class="row" style="margin-top:8px"><button class="btn small" data-a="save">고친 내용 저장</button>${cfg.aiEnabled?'<button class="btn small ghost" data-a="stt">AI로 받아쓰기</button>':''}<button class="btn small danger" data-a="del">삭제</button></div>`;
+      <div class="row" style="margin-top:8px"><button class="btn small" data-a="save">고친 내용 저장</button>${cfg.sttEnabled?'<button class="btn small ghost" data-a="stt">AI로 받아쓰기</button>':''}<button class="btn small danger" data-a="del">삭제</button></div>`;
     d.querySelector('[data-a=save]').onclick=async()=>{const {error}=await sb.from('recordings').update({transcript:d.querySelector('textarea').value}).eq('id',r.id);toast(error?error.message:'저장했습니다.')};
     const stt=d.querySelector('[data-a=stt]');if(stt)stt.onclick=async()=>{stt.disabled=true;stt.textContent='받아쓰는 중…';try{const j=await api('transcribe',{recording_id:r.id});d.querySelector('textarea').value=j.transcript;toast('받아쓰기를 마쳤습니다.')}catch(e){toast(e.message)}stt.disabled=false;stt.textContent='AI로 받아쓰기'};
     d.querySelector('[data-a=del]').onclick=async()=>{if(!d._c){d._c=1;toast('한 번 더 누르면 삭제됩니다.');return}
