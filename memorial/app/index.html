@@ -6,61 +6,100 @@
 <meta name="robots" content="noindex">
 <title>디지털 추모관 · 기록하기</title>
 <link rel="icon" href="/images/logo.png">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Nanum+Myeongjo:wght@400;700&family=Noto+Sans+KR:wght@400;500;700&display=swap">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <style>
-:root{--bg:#f3f4f1;--paper:#fbfbf9;--ink:#1f2a2e;--muted:#5d6a6e;--line:#d7dbd6;--accent:#3f6b63;--accent-soft:#e2ebe7;--gold:#9a7b3c;--danger:#a3412f;
---display:"Gowun Batang",serif;--body:"Noto Sans KR",system-ui,sans-serif}
-@media (prefers-color-scheme:dark){:root{--bg:#161b1d;--paper:#1d2427;--ink:#e7ebe8;--muted:#a2adaa;--line:#334044;--accent:#8cbfb2;--accent-soft:#24332f;--gold:#d1b073;--danger:#e08a78;color-scheme:dark}}
+:root{--bg:#f6f3ee;--paper:#fdfbf8;--ink:#2a2724;--muted:#6f6860;--line:#e3ddd3;--hair:#d9cfbf;--accent:#3b4a47;--accent-soft:#eeeae3;--gold:#a88a55;--gold-soft:#efe6d6;--danger:#9c4a3c;
+--display:"Nanum Myeongjo","Gowun Batang",serif;--body:"Pretendard","Noto Sans KR",system-ui,sans-serif;--shadow:0 1px 2px rgba(60,45,30,.04),0 8px 28px rgba(60,45,30,.06)}
+@media (prefers-color-scheme:dark){:root{--bg:#161514;--paper:#1e1c1a;--ink:#ece7df;--muted:#aaa196;--line:#33302c;--hair:#4a4339;--accent:#c9d3cf;--accent-soft:#26241f;--gold:#cdb07a;--gold-soft:#2c2619;--danger:#e09583;--shadow:none;color-scheme:dark}}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.7 var(--body);word-break:keep-all;overflow-wrap:anywhere}
-.wrap{max-width:860px;margin:0 auto;padding:0 max(16px,env(safe-area-inset-left,0px)) 64px max(16px,env(safe-area-inset-right,0px))}
-header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding-block:18px;border-bottom:1px solid var(--line);margin-bottom:24px}
-.brand{font:700 20px var(--display);color:var(--ink);text-decoration:none}
-.brand small{display:block;font:12px var(--body);color:var(--muted)}
-h1,h2,h3{font-family:var(--display);line-height:1.35;margin:0 0 12px;text-wrap:balance}
-h1{font-size:28px}h2{font-size:22px;margin-top:8px}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.8 var(--body);letter-spacing:-.005em;word-break:keep-all;overflow-wrap:anywhere;-webkit-font-smoothing:antialiased}
+a{color:var(--accent)}
+.wrap{max-width:820px;margin:0 auto;padding:0 max(16px,env(safe-area-inset-left,0px)) 80px max(16px,env(safe-area-inset-right,0px))}
+header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding-block:22px;margin-bottom:32px;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:12px;color:var(--ink);text-decoration:none}
+.brand .mark{width:30px;height:30px;flex:none;color:var(--gold)}
+.brand b{display:block;font:700 19px/1.2 var(--display);letter-spacing:.06em}
+.brand small{display:block;font:12px/1.4 var(--body);color:var(--muted);letter-spacing:.04em;margin-top:2px}
+h1,h2,h3{font-family:var(--display);font-weight:700;line-height:1.4;margin:0 0 12px;text-wrap:balance;letter-spacing:.01em}
+h1{font-size:30px}h2{font-size:21px;margin-top:8px}h3{font-size:18px}
 .muted{color:var(--muted);font-size:14px}
-.card{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:20px;margin-bottom:16px}
-.btn{display:inline-flex;align-items:center;gap:6px;background:var(--accent);color:var(--paper);border:0;border-radius:6px;padding:10px 16px;font:500 15px var(--body);cursor:pointer;text-decoration:none}
-.btn.ghost{background:none;color:var(--accent);border:1px solid var(--accent)}
-.btn.small{padding:6px 12px;font-size:14px}
-.btn.danger{background:none;color:var(--danger);border:1px solid var(--danger)}
-.btn.kakao{background:#FEE500;color:#191919;font-weight:700;padding:14px 22px;font-size:16px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:4px;padding:28px;margin-bottom:18px;box-shadow:var(--shadow)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;background:var(--accent);color:var(--paper);border:1px solid var(--accent);border-radius:999px;padding:10px 22px;font:500 15px var(--body);letter-spacing:.02em;cursor:pointer;text-decoration:none;transition:background .2s,color .2s,border-color .2s}
+.btn:hover{background:var(--ink);border-color:var(--ink)}
+.btn.ghost{background:transparent;color:var(--accent);border-color:var(--hair)}
+.btn.ghost:hover{border-color:var(--accent);background:var(--accent-soft)}
+.btn.small{padding:6px 16px;font-size:14px}
+.btn.danger{background:transparent;color:var(--danger);border-color:color-mix(in srgb,var(--danger) 45%,transparent)}
+.btn.kakao{background:#FEE500;border-color:#FEE500;color:#191919;font-weight:700;padding:14px 30px;font-size:16px}
+.btn.kakao:hover{background:#f5dc00}
 .btn:disabled{opacity:.5;cursor:default}
-button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
-label{display:block;font-size:14px;color:var(--muted);margin:12px 0 4px}
-input,textarea,select{width:100%;font:15px var(--body);padding:10px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink)}
-textarea{min-height:90px;resize:vertical}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 16px}
-.tabs{display:flex;gap:4px;flex-wrap:wrap;border-bottom:1px solid var(--line);margin-bottom:16px}
-.tabs button{background:none;border:0;border-bottom:2px solid transparent;padding:10px 14px;font:500 15px var(--body);color:var(--muted);cursor:pointer}
-.tabs button[aria-selected="true"]{color:var(--accent);border-color:var(--accent)}
-.list{display:grid;gap:12px}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+label{display:block;font-size:13px;color:var(--muted);margin:16px 0 6px;letter-spacing:.03em}
+input,textarea,select{width:100%;font:15px var(--body);padding:11px 12px;border:1px solid var(--line);border-radius:4px;background:var(--bg);color:var(--ink);transition:border-color .2s,background .2s}
+input:focus,textarea:focus,select:focus{border-color:var(--gold);background:var(--paper);outline:none}
+input[type=file]{padding:9px;background:var(--paper)}
+textarea{min-height:96px;resize:vertical;line-height:1.7}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 20px}
+.tabs{display:flex;gap:2px;flex-wrap:wrap;border-bottom:1px solid var(--line);margin-bottom:20px}
+.tabs button{background:none;border:0;border-bottom:2px solid transparent;padding:12px 16px;font:500 15px var(--body);color:var(--muted);cursor:pointer;letter-spacing:.02em}
+.tabs button[aria-selected="true"]{color:var(--ink);border-color:var(--gold)}
+.list{display:grid;gap:14px}
 .row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
 .row>*{min-width:0}
-.thumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
-.thumbs figure{margin:0;background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:8px}
-.thumbs img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:4px;display:block}
+.thumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:16px}
+.thumbs figure{margin:0;background:var(--paper);border:1px solid var(--line);padding:10px 10px 6px;box-shadow:var(--shadow)}
+.thumbs img{width:100%;aspect-ratio:1;object-fit:cover;display:block;filter:saturate(.92)}
+.thumbs figcaption{text-align:center;padding-top:6px}
 .pill{font-size:12px;border-radius:999px;padding:2px 10px;border:1px solid var(--line);color:var(--muted)}
-.pill.ok{color:var(--accent);border-color:var(--accent)}
+.pill.ok{color:var(--gold);border-color:var(--gold)}
 .rec{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--danger);animation:blink 1s infinite}
 @keyframes blink{50%{opacity:.2}}
-@media (prefers-reduced-motion:reduce){.rec{animation:none}}
-.toast{position:fixed;z-index:1000;left:50%;top:20px;box-shadow:0 4px 16px rgba(0,0,0,.25);font-size:16px!important;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:6px;font-size:14px;max-width:90vw}
-.portrait{width:160px;aspect-ratio:3/4;object-fit:cover;border-radius:4px;border:1px solid var(--line);background:var(--accent-soft)}
-.verse{border-left:3px solid var(--gold);padding:10px 14px;background:var(--paper);font-family:var(--display);margin:12px 0}
-.ch{border-top:1px solid var(--line);padding:16px 0}
-.ch .yr{color:var(--gold);font-weight:700;font-size:14px}
-audio{width:100%;margin-top:8px}
-.notice{background:var(--accent-soft);border-radius:6px;padding:12px 14px;font-size:14px}
-@media (max-width:600px){.grid2{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){.rec{animation:none}*{transition:none!important}}
+.toast{position:fixed;z-index:1000;left:50%;top:20px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:12px 22px;border-radius:999px;font-size:15px;max-width:90vw;box-shadow:0 6px 24px rgba(0,0,0,.2)}
+.notice{background:var(--gold-soft);border-radius:4px;padding:14px 16px;font-size:14px}
+audio{width:100%;margin-top:10px;height:40px}
+/* 추모관 보기 */
+.memorial{text-align:center;padding:16px 0 8px}
+.memorial .cross{width:22px;height:22px;color:var(--gold);margin:0 auto 22px;display:block}
+.frame{display:inline-block;padding:10px;border:1px solid var(--hair);background:var(--paper);box-shadow:var(--shadow);margin-bottom:26px}
+.frame .portrait{display:block;width:200px;aspect-ratio:3/4;object-fit:cover;background:var(--accent-soft);filter:saturate(.9)}
+.frame.empty .portrait{display:grid;place-items:center;color:var(--hair)}
+.memorial .eyebrow{font-size:13px;letter-spacing:.3em;color:var(--gold);margin-bottom:10px}
+.memorial h1{font-size:36px;letter-spacing:.12em;margin-bottom:6px}
+.memorial h1 small{font-size:18px;letter-spacing:.06em;color:var(--muted);margin-left:6px;font-weight:400}
+.memorial .dates{font-family:var(--display);color:var(--muted);letter-spacing:.08em}
+.memorial .rest{margin-top:14px;font-family:var(--display);font-size:15px;color:var(--muted)}
+.verse{max-width:34em;margin:30px auto 0;padding:22px 8px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);font:400 18px/1.9 var(--display);color:var(--ink)}
+.verse cite{display:block;margin-top:8px;font:13px var(--body);font-style:normal;color:var(--gold);letter-spacing:.08em}
+.intro{max-width:34em;margin:24px auto 0;color:var(--ink)}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:28px;text-align:left}
+.facts div{background:var(--paper);border:1px solid var(--line);padding:16px 18px;white-space:pre-line;font-size:15px}
+.facts b{display:block;font:700 13px var(--body);color:var(--gold);letter-spacing:.12em;margin-bottom:6px}
+.sec{text-align:center;margin:64px 0 26px}
+.sec h2{display:inline-flex;align-items:center;gap:16px;font-size:20px;letter-spacing:.2em;margin:0}
+.sec h2:before,.sec h2:after{content:"";width:48px;height:1px;background:var(--hair)}
+.sec p{margin:8px 0 0}
+.timeline{position:relative;margin-left:8px;padding-left:28px;border-left:1px solid var(--hair)}
+.ch{position:relative;padding:4px 0 30px}
+.ch:before{content:"";position:absolute;left:-33px;top:12px;width:9px;height:9px;border-radius:50%;background:var(--paper);border:1px solid var(--gold)}
+.ch .yr{color:var(--gold);font-weight:500;font-size:13px;letter-spacing:.12em}
+.ch h3{margin:2px 0 8px}
+.ch p{margin:0}
+.letter{background:var(--paper);border:1px solid var(--line);padding:20px 22px;box-shadow:var(--shadow)}
+.letter p{margin:0 0 10px;font-family:var(--display);line-height:1.9}
+.letter .from{font-size:13px;color:var(--muted);text-align:right}
+.hero-login{text-align:center;padding:56px 24px}
+.hero-login .cross{width:26px;height:26px;color:var(--gold);margin:0 auto 22px;display:block}
+.hero-login h1{font-size:30px;letter-spacing:.06em}
+@media (max-width:600px){.grid2{grid-template-columns:1fr}.card{padding:20px}.memorial h1{font-size:30px}.frame .portrait{width:170px}h1{font-size:26px}}
 </style>
 </head>
 <body>
 <div class="wrap">
   <header>
-    <a class="brand" href="#">디지털 추모관<small>가칭 · 여의도순복음춘천교회 · 시범 운영</small></a>
+    <a class="brand" href="#"><svg class="mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M12 2.5v19M6 8.5h12"/></svg><span><b>디지털 추모관</b><small>여의도순복음춘천교회 · 가칭 · 시범 운영</small></span></a>
     <div class="row" id="authbox"></div>
   </header>
   <main id="main"><p class="muted">불러오는 중…</p></main>
@@ -74,6 +113,7 @@ const QUESTIONS=[
  '가장 힘들었던 때는 언제였고, 어떻게 이겨내셨어요?','처음 교회에 나가신 계기는 무엇이었어요?',
  '가장 좋아하시는 성경 말씀과 그 이유는요?','가장 좋아하시는 찬송은요?','살면서 가장 감사했던 일은 무엇이에요?',
  '자녀들에게 꼭 남기고 싶은 말씀은요?','손주들에게 하고 싶은 말씀은요?','어떤 사람으로 기억되고 싶으세요?'];
+const CROSS='<svg class="cross" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M12 2.5v19M6 8.5h12"/></svg>';
 const VIS={private:'가족만 보기',church:'로그인한 교회 이용자',public:'전체 공개'};
 let sb=null, cfg=null, session=null;
 const $=s=>document.querySelector(s);
@@ -108,9 +148,9 @@ function route(){
 }
 
 function loginPage(){
-  $('#main').innerHTML=`<div class="card" style="text-align:center;padding:36px 20px">
-    <h1>부모님의 이야기를 남겨 주세요</h1>
-    <p class="muted" style="max-width:46ch;margin:0 auto 24px">카카오로 간편하게 시작하세요. 기록은 기본적으로 가족만 볼 수 있으며, 이용료는 없습니다.</p>
+  $('#main').innerHTML=`<div class="card hero-login">${CROSS}
+    <h1>사랑하는 분의 삶을<br>정성껏 남겨 드립니다</h1>
+    <p class="muted" style="max-width:46ch;margin:0 auto 24px">목소리와 사진, 걸어오신 믿음의 길을 가족과 함께 기록하세요. 기록은 기본적으로 가족만 볼 수 있으며, 이용료는 없습니다.</p>
     <button class="btn kakao" id="kakao">카카오로 시작하기</button>
     <p class="muted" style="margin-top:20px"><a href="/memorial/">샘플 화면 먼저 보기</a></p></div>`;
   $('#kakao').onclick=()=>sb.auth.signInWithOAuth({provider:'kakao',options:{redirectTo:location.origin+'/memorial/app/'}});
@@ -305,25 +345,31 @@ async function viewPage(id){
   const recMap=Object.fromEntries((recs||[]).map(r=>[r.id,r]));
   const portrait=await signed(m.portrait_path);
   const age=m.birth_date&&m.death_date?Math.floor((new Date(m.death_date)-new Date(m.birth_date))/31557600000):null;
-  $('#main').innerHTML=`<div class="row" style="align-items:flex-start;gap:24px">
-     ${portrait?`<img class="portrait" src="${esc(portrait)}" alt="${esc(m.name)}">`:'<div class="portrait"></div>'}
-     <div style="flex:1;min-width:220px"><h1>${esc(m.name)} ${esc(m.title||'')}</h1>
-      <div class="muted">${fmtDate(m.birth_date)}${m.death_date?' ~ '+fmtDate(m.death_date):''}${age?` · 향년 ${age}세`:''}${m.hometown?' · '+esc(m.hometown):''}</div>
-      ${m.verse?`<div class="verse">"${esc(m.verse)}"<div class="muted" style="font-family:var(--body)">${esc(m.verse_ref||'')}</div></div>`:''}
-      ${m.hymn?`<div class="muted">애송 찬송 · ${esc(m.hymn)}</div>`:''}${m.intro?`<p>${esc(m.intro)}</p>`:''}${m.chief_mourners?`<div class="muted" style="white-space:pre-line;margin-top:8px"><b>상주·유족</b><br>${esc(m.chief_mourners)}</div>`:''}${m.funeral_info?`<div class="muted" style="white-space:pre-line;margin-top:8px"><b>장례 일정</b><br>${esc(m.funeral_info)}</div>`:''}</div></div>
-   <h2 style="margin-top:32px">생애의 장</h2><div id="chs">${(chs||[]).length?'':'<p class="muted">아직 공개된 장이 없습니다.</p>'}</div>
-   <h2 style="margin-top:32px">사진</h2><div class="thumbs" id="phs"></div>
-   ${(recs||[]).length&&cfg.aiEnabled&&session?`<h2 style="margin-top:32px">여쭤보기</h2><div class="card"><p class="muted">궁금한 것을 적으면 생전에 남기신 실제 녹음 가운데 가장 가까운 답을 찾아 들려드립니다. 새로 지어낸 말은 없습니다.</p>
+  const yrs=d=>d?d.split('-')[0]:'';
+  $('#main').innerHTML=`<section class="memorial">${CROSS}
+     <div class="frame${portrait?'':' empty'}">${portrait?`<img class="portrait" src="${esc(portrait)}" alt="${esc(m.name)} 님 영정">`:'<div class="portrait">'+CROSS+'</div>'}</div>
+     <div class="eyebrow">${m.death_date?'추 모':'생 애 의 기 록'}</div>
+     <h1>${esc(m.name)}${m.title?`<small>${esc(m.title)}</small>`:''}</h1>
+     <div class="dates">${fmtDate(m.birth_date)}${m.death_date?' — '+fmtDate(m.death_date):''}${age?` · 향년 ${age}세`:''}</div>
+     ${m.hometown?`<div class="muted" style="margin-top:4px">${esc(m.hometown)}</div>`:''}
+     ${m.death_date?'<div class="rest">주님의 품 안에서 평안히 쉬고 계십니다</div>':''}
+     ${m.verse?`<blockquote class="verse">${esc(m.verse)}${m.verse_ref?`<cite>${esc(m.verse_ref)}</cite>`:''}</blockquote>`:''}
+     ${m.intro?`<p class="intro">${esc(m.intro).replace(/\n/g,'<br>')}</p>`:''}
+     ${(m.hymn||m.chief_mourners||m.funeral_info)?`<div class="facts">${m.hymn?`<div><b>애송 찬송</b>${esc(m.hymn)}</div>`:''}${m.chief_mourners?`<div><b>상주 · 유족</b>${esc(m.chief_mourners)}</div>`:''}${m.funeral_info?`<div><b>장례 일정</b>${esc(m.funeral_info)}</div>`:''}</div>`:''}
+   </section>
+   <div class="sec"><h2>생애</h2></div><div id="chs" class="timeline">${(chs||[]).length?'':'<p class="muted">아직 공개된 장이 없습니다.</p>'}</div>
+   <div class="sec"><h2>사진</h2></div><div class="thumbs" id="phs"></div>
+   ${(recs||[]).length&&cfg.aiEnabled&&session?`<div class="sec"><h2>여쭤보기</h2></div><div class="card"><p class="muted">궁금한 것을 적으면 생전에 남기신 실제 녹음 가운데 가장 가까운 답을 찾아 들려드립니다. 새로 지어낸 말은 없습니다.</p>
      <div class="row"><input id="askq" placeholder="예: 힘드실 때 어떻게 버티셨어요?" style="flex:1"><button class="btn" id="askb">찾기</button></div><div id="aska"></div></div>`:''}
-   <h2 style="margin-top:32px">추모의 글</h2><div class="list" id="gb"></div>
-   ${session?`<div class="card" style="margin-top:12px"><label for="gbn">이름</label><input id="gbn" maxlength="20" value="${esc(session.user.user_metadata?.name||'')}"><label for="gbt">남기실 말씀</label><textarea id="gbt" maxlength="2000"></textarea><button class="btn" id="gbs" style="margin-top:10px">글 남기기</button></div>`:'<p class="muted">로그인하면 추모의 글을 남길 수 있습니다.</p>'}`;
+   <div class="sec"><h2>추모의 글</h2><p class="muted">고인을 기억하는 마음을 남겨 주세요</p></div><div class="list" id="gb"></div>
+   ${session?`<div class="card" style="margin-top:12px"><label for="gbn">이름</label><input id="gbn" maxlength="20" value="${esc(session.user.user_metadata?.name||'')}"><label for="gbt">남기실 말씀</label><textarea id="gbt" maxlength="2000"></textarea><button class="btn" id="gbs" style="margin-top:14px">마음 남기기</button></div>`:'<p class="muted">로그인하면 추모의 글을 남길 수 있습니다.</p>'}`;
   const chEl=$('#chs');
   for(const c of chs||[]){const r=recMap[c.recording_id];const d=document.createElement('div');d.className='ch';
     d.innerHTML=`<div class="yr">${esc(c.period||'')}</div><h3>${esc(c.title)}</h3><p>${esc(c.body||'').replace(/\n/g,'<br>')}</p>`;
     if(r){const a=document.createElement('audio');a.controls=true;a.preload='none';a.src=await signed(r.audio_path);d.appendChild(a)}
     chEl.appendChild(d)}
   const phEl=$('#phs');for(const p of ps||[]){const f=document.createElement('figure');f.innerHTML=`<img src="${esc(await signed(p.path))}" alt="${esc(p.caption||'')}"><figcaption class="muted">${esc([p.year,p.caption].filter(Boolean).join(' · '))}</figcaption>`;phEl.appendChild(f)}
-  const gbEl=$('#gb');(gb||[]).forEach(g=>{const d=document.createElement('div');d.className='card';d.innerHTML=`<b>${esc(g.author_name)}</b> <span class="muted">${new Date(g.created_at).toLocaleDateString('ko-KR')}</span><p style="margin:6px 0 0">${esc(g.body)}</p>`;gbEl.appendChild(d)});
+  const gbEl=$('#gb');(gb||[]).forEach(g=>{const d=document.createElement('div');d.className='letter';d.innerHTML=`<p>${esc(g.body).replace(/\n/g,'<br>')}</p><div class="from">${esc(g.author_name)} 드림 · ${new Date(g.created_at).toLocaleDateString('ko-KR')}</div>`;gbEl.appendChild(d)});
   if($('#gbs'))$('#gbs').onclick=async()=>{const body=$('#gbt').value.trim();if(!body)return;
     const {error}=await sb.from('guestbook').insert({memorial_id:id,author_id:session.user.id,author_name:$('#gbn').value.trim()||'익명',body});
     if(error)toast(error.message);else viewPage(id)};
