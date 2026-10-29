@@ -47,7 +47,7 @@ textarea{min-height:90px;resize:vertical}
 .rec{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--danger);animation:blink 1s infinite}
 @keyframes blink{50%{opacity:.2}}
 @media (prefers-reduced-motion:reduce){.rec{animation:none}}
-.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:6px;font-size:14px;max-width:90vw}
+.toast{position:fixed;z-index:1000;left:50%;top:20px;box-shadow:0 4px 16px rgba(0,0,0,.25);font-size:16px!important;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:6px;font-size:14px;max-width:90vw}
 .portrait{width:160px;aspect-ratio:3/4;object-fit:cover;border-radius:4px;border:1px solid var(--line);background:var(--accent-soft)}
 .verse{border-left:3px solid var(--gold);padding:10px 14px;background:var(--paper);font-family:var(--display);margin:12px 0}
 .ch{border-top:1px solid var(--line);padding:16px 0}
@@ -245,7 +245,7 @@ async function tabChapters(m){
       <label>본문</label><textarea data-f="body">${esc(c.body)}</textarea>
       <div class="row" style="margin-top:8px"><label style="display:flex;gap:6px;align-items:center;margin:0;color:var(--ink)"><input type="checkbox" data-f="approved" ${c.approved?'checked':''} style="width:auto"> 가족 확인 완료</label>
       <button class="btn small" data-a="save">저장</button><button class="btn small danger" data-a="del">삭제</button></div>`;
-    d.querySelector('[data-a=save]').onclick=async()=>{const u={};d.querySelectorAll('[data-f]').forEach(i=>u[i.dataset.f]=i.type==='checkbox'?i.checked:i.value);const {error}=await sb.from('chapters').update(u).eq('id',c.id);toast(error?error.message:'저장했습니다.')};
+    d.querySelector('[data-a=save]').onclick=async()=>{const u={};d.querySelectorAll('[data-f]').forEach(i=>u[i.dataset.f]=i.type==='checkbox'?i.checked:i.value);const b=d.querySelector('[data-a=save]');const {error}=await sb.from('chapters').update(u).eq('id',c.id);toast(error?error.message:'저장했습니다.');if(!error){b.textContent='저장됨 ✓';setTimeout(()=>b.textContent='저장',2500)}};
     d.querySelector('[data-a=del]').onclick=async()=>{if(!d._c){d._c=1;toast('한 번 더 누르면 삭제됩니다.');return}await sb.from('chapters').delete().eq('id',c.id);tabChapters(m)};
     list.appendChild(d)}
 }
