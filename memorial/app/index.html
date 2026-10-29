@@ -128,10 +128,31 @@ async function homePage(){
    :'<div class="card"><p>아직 만든 기록관이 없습니다.</p><p class="muted">부모님(또는 본인)의 기록관을 만들고, 질문에 말로 답하며 이야기를 남겨 보세요.</p></div>'}`;
 }
 
+function fileToB64(f){return new Promise((ok,no)=>{const r=new FileReader();r.onload=()=>ok(String(r.result).split(',')[1]);r.onerror=no;r.readAsDataURL(f)})}
+async function shrinkImage(f){const img=await createImageBitmap(f);const k=Math.min(1,1600/Math.max(img.width,img.height));
+  const c=document.createElement('canvas');c.width=Math.round(img.width*k);c.height=Math.round(img.height*k);c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+  return c.toDataURL('image/jpeg',0.85).split(',')[1]}
+async function readObit(f){
+  if(!f)return;const msg=$('#obit-msg');msg.textContent='부고장을 읽는 중… (10~20초)';
+  try{
+    let data,media_type;
+    if(f.type==='application/pdf'){if(f.size>3e6)throw new Error('PDF가 너무 큽니다(3MB 이하). 사진으로 올려 주세요.');data=await fileToB64(f);media_type='application/pdf'}
+    else{data=await shrinkImage(f);media_type='image/jpeg'}
+    const j=await api('obituary',{data,media_type});
+    const set=(id,v)=>{if(v&&$(id))$(id).value=v};
+    set('#f-name',j.name);set('#f-title',j.title);set('#f-birth',/^\d{4}-\d{2}-\d{2}$/.test(j.birth_date||'')?j.birth_date:'');
+    set('#f-death',/^\d{4}-\d{2}-\d{2}$/.test(j.death_date||'')?j.death_date:'');set('#f-home',j.hometown);
+    set('#f-mourn',j.chief_mourners);set('#f-funeral',j.funeral_info);set('#f-verse',j.verse);set('#f-vref',j.verse_ref);
+    msg.textContent='채웠습니다. 내용을 확인하고 고친 뒤 저장해 주세요.';toast('부고장 내용을 채웠습니다. 확인 후 저장해 주세요.');
+  }catch(e){msg.textContent='';toast('부고장을 읽지 못했습니다: '+e.message)}
+}
 async function editInfo(m){
   m=m||{visibility:'private'};
   const isNew=!m.id;
   const html=`<div class="card"><h2>${isNew?'새 기록관 만들기':'기본 정보'}</h2>
+   ${cfg.aiEnabled?`<div class="card" style="background:var(--soft,#f3f1ec);margin:0 0 16px"><b>부고장으로 한 번에 채우기 (선택)</b>
+    <p class="muted" style="margin:6px 0 10px">부고장 사진이나 PDF를 올리면 성함·직분·날짜·상주·장례 일정을 아래 칸에 채워 드립니다. 저장 전에 꼭 확인해 주세요. 부고장 파일은 보관하지 않습니다.</p>
+    <input id="f-obit" type="file" accept="image/*,application/pdf"> <span id="obit-msg" class="muted"></span></div>`:''}
    <div class="grid2">
     <div><label for="f-name">성함 *</label><input id="f-name" value="${esc(m.name)}" maxlength="40"></div>
     <div><label for="f-title">직분·호칭</label><input id="f-title" value="${esc(m.title)}" placeholder="예: 권사, 장로, 성도"></div>
@@ -142,18 +163,21 @@ async function editInfo(m){
    </div>
    <label for="f-verse">좋아하시는 말씀</label><textarea id="f-verse" style="min-height:60px">${esc(m.verse)}</textarea>
    <label for="f-vref">말씀 출처</label><input id="f-vref" value="${esc(m.verse_ref)}" placeholder="예: 디모데후서 4:7">
+   <label for="f-mourn">상주·유족</label><textarea id="f-mourn" style="min-height:60px" placeholder="예: 장남 홍길동&#10;장녀 홍길순">${esc(m.chief_mourners)}</textarea>
+   <label for="f-funeral">장례 일정 (빈소·발인·장지)</label><textarea id="f-funeral" style="min-height:60px">${esc(m.funeral_info)}</textarea>
    <label for="f-intro">짧은 소개</label><textarea id="f-intro">${esc(m.intro)}</textarea>
    <label for="f-vis">공개 범위</label><select id="f-vis">${Object.entries(VIS).map(([k,v])=>`<option value="${k}" ${m.visibility===k?'selected':''}>${v}</option>`).join('')}</select>
    <label for="f-portrait">영정·대표 사진</label><input id="f-portrait" type="file" accept="image/*">
    ${isNew?`<label style="display:flex;gap:8px;align-items:flex-start;color:var(--ink)"><input type="checkbox" id="f-consent" style="width:auto;margin-top:6px"> 본인 또는 가족으로서 이 기록을 남기는 데 동의하며, 녹음과 사진을 교회 디지털 추모관에 보관하는 것에 동의합니다. 언제든 내려받거나 삭제를 요청할 수 있습니다.</label>`:''}
    <div class="row" style="margin-top:16px"><button class="btn" id="save">${isNew?'만들기':'저장'}</button>${isNew?'<a class="btn ghost" href="#">취소</a>':''}</div></div>`;
   if(isNew)$('#main').innerHTML=html;else $('#tab').innerHTML=html;
+  const ob=$('#f-obit');if(ob)ob.onchange=()=>readObit(ob.files[0]);
   $('#save').onclick=async()=>{
     const name=$('#f-name').value.trim();if(!name)return toast('성함을 입력해 주세요.');
     if(isNew&&!$('#f-consent').checked)return toast('동의에 체크해 주세요.');
     const row={name,title:$('#f-title').value.trim()||null,birth_date:$('#f-birth').value||null,death_date:$('#f-death').value||null,
       hometown:$('#f-home').value.trim()||null,hymn:$('#f-hymn').value.trim()||null,verse:$('#f-verse').value.trim()||null,
-      verse_ref:$('#f-vref').value.trim()||null,intro:$('#f-intro').value.trim()||null,visibility:$('#f-vis').value,updated_at:new Date().toISOString()};
+      verse_ref:$('#f-vref').value.trim()||null,intro:$('#f-intro').value.trim()||null,chief_mourners:$('#f-mourn').value.trim()||null,funeral_info:$('#f-funeral').value.trim()||null,visibility:$('#f-vis').value,updated_at:new Date().toISOString()};
     $('#save').disabled=true;
     try{
       let id=m.id;
@@ -286,7 +310,7 @@ async function viewPage(id){
      <div style="flex:1;min-width:220px"><h1>${esc(m.name)} ${esc(m.title||'')}</h1>
       <div class="muted">${fmtDate(m.birth_date)}${m.death_date?' ~ '+fmtDate(m.death_date):''}${age?` · 향년 ${age}세`:''}${m.hometown?' · '+esc(m.hometown):''}</div>
       ${m.verse?`<div class="verse">"${esc(m.verse)}"<div class="muted" style="font-family:var(--body)">${esc(m.verse_ref||'')}</div></div>`:''}
-      ${m.hymn?`<div class="muted">애송 찬송 · ${esc(m.hymn)}</div>`:''}${m.intro?`<p>${esc(m.intro)}</p>`:''}</div></div>
+      ${m.hymn?`<div class="muted">애송 찬송 · ${esc(m.hymn)}</div>`:''}${m.intro?`<p>${esc(m.intro)}</p>`:''}${m.chief_mourners?`<div class="muted" style="white-space:pre-line;margin-top:8px"><b>상주·유족</b><br>${esc(m.chief_mourners)}</div>`:''}${m.funeral_info?`<div class="muted" style="white-space:pre-line;margin-top:8px"><b>장례 일정</b><br>${esc(m.funeral_info)}</div>`:''}</div></div>
    <h2 style="margin-top:32px">생애의 장</h2><div id="chs">${(chs||[]).length?'':'<p class="muted">아직 공개된 장이 없습니다.</p>'}</div>
    <h2 style="margin-top:32px">사진</h2><div class="thumbs" id="phs"></div>
    ${(recs||[]).length&&cfg.aiEnabled&&session?`<h2 style="margin-top:32px">여쭤보기</h2><div class="card"><p class="muted">궁금한 것을 적으면 생전에 남기신 실제 녹음 가운데 가장 가까운 답을 찾아 들려드립니다. 새로 지어낸 말은 없습니다.</p>

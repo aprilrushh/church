@@ -152,3 +152,7 @@ create policy media_update on storage.objects for update
 drop policy if exists media_delete on storage.objects;
 create policy media_delete on storage.objects for delete
   using (bucket_id = 'memorial-media' and public.can_edit(((storage.foldername(name))[1])::uuid));
+
+-- 부고장 정보(상주·장례 일정)
+alter table public.memorials add column if not exists chief_mourners text;
+alter table public.memorials add column if not exists funeral_info text;
