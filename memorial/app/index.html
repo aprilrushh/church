@@ -287,7 +287,11 @@ async function editPage(id){
   $('#main').innerHTML=`<div class="row" style="justify-content:space-between"><h1 style="margin:0">${esc(m.name)} ${esc(m.title||'')}</h1><a class="btn small ghost" href="#view-${id}">추모관 보기</a></div>
    <p class="muted" style="margin-top:6px">아래 탭을 눌러 내용을 고치고, 각 항목의 <b>저장</b>을 눌러 주세요.</p>
    <p class="muted">${VIS[m.visibility]} · <a href="#">내 기록관 목록</a></p>
+   <div class="card row" style="gap:18px;padding:18px 20px;margin-top:14px"><div id="ptThumb" style="width:72px;aspect-ratio:3/4;border:1px solid var(--hair);background:var(--accent-soft);border-radius:36px 36px 2px 2px;overflow:hidden;display:grid;place-items:center;color:var(--gold)">✝</div>
+    <div style="flex:1;min-width:180px"><b>영정 · 대표 사진</b><div class="muted">추모관 맨 위 아치 액자에 모셔지는 사진입니다.</div></div><button class="btn small" id="ptBtn">${m.portrait_path?'사진 바꾸기':'＋ 사진 올리기'}</button></div>
    <div class="tabs" role="tablist">${['녹음','생애의 장','남기신 말씀','사진','기본 정보'].map((t,i)=>`<button role="tab" data-t="${i}" aria-selected="${i===0}">${t}</button>`).join('')}</div><div id="tab"></div>`;
+  (async()=>{const u=await signed(m.portrait_path);if(u)$('#ptThumb').innerHTML=`<img src="${esc(u)}" alt="" style="width:100%;height:100%;object-fit:cover">`})();
+  $('#ptBtn').onclick=()=>portraitPicker(id,'',()=>editPage(id));
   const tabs=[()=>tabRec(m),()=>tabChapters(m),()=>tabSayings(m),()=>tabPhotos(m),()=>editInfo(m)];
   document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tabs button').forEach(x=>x.setAttribute('aria-selected',x===b));tabs[+b.dataset.t]()});
   let t0=0;try{t0=+(sessionStorage.getItem('memTab')||0);sessionStorage.removeItem('memTab')}catch{}
@@ -404,6 +408,14 @@ async function tabPhotos(m){
     list.appendChild(f)}
 }
 
+async function uploadPortrait(id,file){
+  const {blob,ext}=await shrinkForUpload(file,1600);const p=`${id}/portrait-${Date.now()}.${ext}`;
+  const {error:e1}=await sb.storage.from('memorial-media').upload(p,blob,{upsert:true,contentType:blob.type||undefined});if(e1)throw e1;
+  const {error:e2}=await sb.from('memorials').update({portrait_path:p}).eq('id',id);if(e2)throw e2;return p}
+function portraitPicker(id,label,onDone){
+  const inp=document.createElement('input');inp.type='file';inp.accept='image/*';
+  inp.onchange=async()=>{const f=inp.files[0];if(!f)return;toast('영정 사진을 올리는 중…');
+    try{await uploadPortrait(id,f);toast('영정 사진을 올렸습니다.');onDone()}catch(e){alert('사진을 올리지 못했습니다: '+e.message)}};inp.click()}
 function emptyBox(msg,tab,id){return `<div class="notice" style="text-align:center">${msg} <a href="#edit-${id}" onclick="try{sessionStorage.setItem('memTab','${tab}')}catch{}">지금 추가하기 →</a></div>`}
 function lightbox(items,i){
   const o=document.createElement('div');o.className='lightbox';o.setAttribute('role','dialog');o.setAttribute('aria-modal','true');
@@ -429,7 +441,7 @@ async function viewPage(id){
   const yrs=d=>d?d.split('-')[0]:'';
   let canEdit=false;if(session){if(m.owner_id===session.user.id)canEdit=true;else{const {data:mm}=await sb.from('memorial_members').select('role').eq('memorial_id',id).eq('user_id',session.user.id).maybeSingle();canEdit=mm?.role==='editor'}}
   $('#main').innerHTML=`${canEdit?`<div class="row" style="justify-content:flex-end;margin-bottom:12px"><a class="btn ghost small" href="#">← 내 추모관 목록</a><a class="btn small" href="#edit-${id}">✎ 이 추모관 편집하기</a></div>`:''}<div class="room">${['tl','tr','bl','br'].map(k=>CORNER.replace('%s',k)).join('')}${LINTEL.replace('%s','lintel')}<section class="memorial">${CROSS}
-     <div class="niche"><div class="frame${portrait?'':' empty'}">${portrait?`<img class="portrait" src="${esc(portrait)}" alt="${esc(m.name)} 님 영정">`:'<div class="portrait">'+CROSS+'</div>'}</div></div>
+     <div class="niche" style="position:relative"><div class="frame${portrait?'':' empty'}">${portrait?`<img class="portrait" src="${esc(portrait)}" alt="${esc(m.name)} 님 영정">`:'<div class="portrait">'+CROSS+'</div>'}</div>${canEdit?`<div style="margin-top:12px"><button class="btn small${portrait?' ghost':''}" id="setPortrait">${portrait?'영정 사진 바꾸기':'＋ 영정 사진 올리기'}</button></div>`:''}</div>
      <div class="eyebrow">${m.death_date?'추 모':'생 애 의 기 록'}</div>
      <h1>${esc(m.name)}${m.title?`<small>${esc(m.title)}</small>`:''}</h1>
      <div class="dates">${fmtDate(m.birth_date)}${m.death_date?' — '+fmtDate(m.death_date):''}${age?` · 향년 ${age}세`:''}</div>
@@ -452,6 +464,7 @@ async function viewPage(id){
      <label for="gbt" id="gbtl">추억</label><textarea id="gbt" maxlength="2000" placeholder="고인과 함께했던 기억을 들려주세요"></textarea>
      <div id="memphoto"><label for="gbp">사진 (선택)</label><input id="gbp" type="file" accept="image/*"></div>
      <button class="btn" id="gbs" style="margin-top:14px">올리기</button></div>`:`<p class="muted" style="text-align:center;margin-top:24px">로그인하면 추억과 위로의 말을 남길 수 있습니다. <button class="btn small ghost" id="kakao2">카카오로 로그인</button></p>`}${LINTEL.replace('%s','floor')}</div>`;
+  if($('#setPortrait'))$('#setPortrait').onclick=()=>portraitPicker(id,'',()=>viewPage(id));
   const chEl=$('#chs');
   for(const c of chs||[]){const r=recMap[c.recording_id];const d=document.createElement('div');d.className='ch';
     d.innerHTML=`<div class="yr">${esc(c.period||'')}</div><h3>${esc(c.title)}</h3><p>${esc(c.body||'').replace(/\n/g,'<br>')}</p>`;
