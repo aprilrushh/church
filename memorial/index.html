@@ -3,250 +3,111 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="robots" content="noindex">
-<meta name="description" content="여의도순복음춘천교회가 준비 중인 무료 디지털 추모관(가칭) 샘플. 말로 남기는 생애 기록, 실제 육성 여쭤보기, 온라인 추모관.">
+<title>디지털 추모관 | 무료 온라인 추모관 만들기 - 여의도순복음춘천교회</title>
+<meta name="description" content="사랑하는 부모님과 가족을 위한 무료 온라인 추모관. 영정 사진, 생애 이야기, 생전 목소리 녹음, 남기신 말씀, 추억 사진을 가족과 함께 기록하세요. 교회가 비영리로 운영하며 누구나 이용할 수 있습니다.">
+<link rel="canonical" href="https://chunchurch.com/memorial/">
+<meta property="og:title" content="디지털 추모관 — 사랑하는 분의 삶을 정성껏 남겨 드립니다">
+<meta property="og:description" content="무료 온라인 추모관. 사진·생애·목소리·남기신 말씀을 가족과 함께 기록하세요.">
+<meta property="og:type" content="website"><meta property="og:url" content="https://chunchurch.com/memorial/">
 <link rel="icon" href="/images/logo.png">
-<script async src="https://www.googletagmanager.com/gtag/js?id=AW-18219820392"></script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18531482947"></script>
-<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','AW-18219820392');gtag('config','AW-18531482947');</script>
-<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
-<title>디지털 추모관 샘플</title>
-<meta name="claude:viewport-fit-sides" content="cover">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;500;700&display=swap">
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','AW-18219820392');gtag('config','AW-18531482947');
+window.MEM_CONV='';function memStart(){try{gtag('event','memorial_start');if(window.MEM_CONV)gtag('event','conversion',{send_to:window.MEM_CONV})}catch(e){}}</script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700&family=Noto+Sans+KR:wght@400;500;700&display=swap">
 <style>
-/* Layout: 한 사람의 생애를 따라 내려가는 세로 기록지 — 머리말, 생애의 장, 육성 여쭤보기, 추모 글 */
-:root{
-  --bg:#f3f4f1; --paper:#fbfbf9; --ink:#1f2a2e; --muted:#5d6a6e; --line:#d7dbd6;
-  --accent:#3f6b63; --accent-soft:#e2ebe7; --gold:#9a7b3c;
-  --display:"Gowun Batang","Noto Serif KR",serif; --body:"Noto Sans KR",system-ui,sans-serif;
-}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#161b1d; --paper:#1d2427; --ink:#e7ebe8; --muted:#a2adaa; --line:#334044;
-  --accent:#8cbfb2; --accent-soft:#24332f; --gold:#d1b073; color-scheme:dark}}
-:root[data-theme="dark"]{
-  --bg:#161b1d; --paper:#1d2427; --ink:#e7ebe8; --muted:#a2adaa; --line:#334044;
-  --accent:#8cbfb2; --accent-soft:#24332f; --gold:#d1b073; color-scheme:dark}
-body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.75;word-break:keep-all;overflow-wrap:anywhere}
-.wrap{max-width:820px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-.banner{background:var(--accent-soft);color:var(--ink);font-size:13px;padding-block:8px;text-align:center}
-header.site{padding-block:20px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
-.brand{font-family:var(--display);font-size:20px;font-weight:700}
-.brand small{display:block;font-family:var(--body);font-size:12px;color:var(--muted);font-weight:400;letter-spacing:.04em}
-nav.top{display:flex;gap:16px;font-size:14px}
-nav.top a{color:var(--muted);text-decoration:none}
-nav.top a:hover{color:var(--accent)}
-h1,h2,h3{font-family:var(--display);text-wrap:balance;line-height:1.35;margin:0}
-.intro{padding-block:40px 32px;border-bottom:1px solid var(--line)}
-.intro h1{font-size:clamp(28px,5vw,40px)}
-.intro p{color:var(--muted);max-width:60ch;margin:14px 0 0}
-.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:28px}
-.step{border-top:2px solid var(--accent);padding-top:12px}
-.step b{display:block;font-size:15px}
-.step span{font-size:14px;color:var(--muted)}
-.btn{display:inline-block;background:var(--accent);color:var(--paper);border:0;border-radius:6px;padding:12px 20px;font:500 15px var(--body);cursor:pointer;text-decoration:none;margin-top:24px}
-.btn.ghost{background:none;color:var(--accent);border:1px solid var(--accent);margin-left:8px}
-.btn:focus-visible,button:focus-visible,select:focus-visible,textarea:focus-visible,input:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
-section{padding-block:40px;border-bottom:1px solid var(--line)}
-.eyebrow{font-size:12px;letter-spacing:.12em;color:var(--gold);font-weight:700;margin-bottom:8px}
-.profile{display:grid;grid-template-columns:180px minmax(0,1fr);gap:28px;align-items:start}
-.portrait{aspect-ratio:3/4;max-width:100%;border-radius:4px;background:
-  linear-gradient(160deg,var(--accent-soft),var(--line));display:grid;place-items:center;color:var(--muted);font-size:13px;text-align:center;border:1px solid var(--line)}
-.profile h2{font-size:30px}
-.dates{color:var(--muted);font-size:14px;font-variant-numeric:tabular-nums;margin-top:4px}
-.verse{margin:18px 0 0;padding:14px 18px;background:var(--paper);border-left:3px solid var(--gold);font-family:var(--display);font-size:17px}
-.verse cite{display:block;font-family:var(--body);font-style:normal;font-size:13px;color:var(--muted);margin-top:4px}
-.facts{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
-.chip{font-size:13px;border:1px solid var(--line);border-radius:999px;padding:3px 12px;color:var(--muted);background:var(--paper)}
-.chapters{display:grid;gap:0;margin-top:20px}
-.ch{display:grid;grid-template-columns:110px minmax(0,1fr);gap:20px;padding-block:18px;border-top:1px solid var(--line)}
-.ch .yr{font-variant-numeric:tabular-nums;color:var(--gold);font-weight:700;font-size:14px}
-.ch h3{font-size:19px}
-.ch p{margin:6px 0 0;color:var(--ink)}
-.voice{font-size:13px;color:var(--accent);background:none;border:0;padding:0;margin-top:6px;cursor:pointer;font-family:var(--body)}
-.photos{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:20px}
-.ph{aspect-ratio:1;border-radius:4px;border:1px solid var(--line);display:flex;align-items:flex-end;padding:8px;font-size:12px;color:var(--muted);background:var(--paper)}
-.ph:nth-child(1){background:linear-gradient(180deg,var(--accent-soft),var(--paper))}
-.ph:nth-child(2){background:linear-gradient(200deg,var(--line),var(--paper))}
-.ph:nth-child(3){background:linear-gradient(140deg,var(--accent-soft),var(--line))}
-.ph:nth-child(4){background:linear-gradient(170deg,var(--paper),var(--accent-soft))}
-.ask{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:24px;margin-top:20px}
-.ask label{font-size:14px;color:var(--muted);display:block;margin-bottom:8px}
-.qs{display:flex;flex-wrap:wrap;gap:8px}
-.qs button{font:14px var(--body);border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;padding:6px 14px;cursor:pointer}
-.qs button[aria-pressed="true"]{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
-.answer{margin-top:18px;border-top:1px dashed var(--line);padding-top:16px}
-.answer .meta{font-size:12px;color:var(--muted)}
-.answer blockquote{margin:8px 0 0;font-family:var(--display);font-size:18px}
-.play{display:flex;align-items:center;gap:12px;margin-top:12px}
-.play button{width:40px;height:40px;border-radius:50%;border:0;background:var(--accent);color:var(--paper);cursor:pointer;font-size:14px}
-.bar{flex:1;height:4px;background:var(--line);border-radius:2px;overflow:hidden}
-.bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .3s linear}
-.note{font-size:13px;color:var(--muted);margin-top:14px}
-.book{display:grid;gap:12px;margin-top:16px}
-.entry{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:14px 16px}
-.entry b{font-size:14px}
-.entry span{font-size:12px;color:var(--muted);margin-left:8px}
-.entry p{margin:4px 0 0}
-form.write{display:grid;gap:8px;margin-top:16px}
-form.write input,form.write textarea{font:15px var(--body);padding:10px;border:1px solid var(--line);border-radius:6px;background:var(--paper);color:var(--ink);width:100%;box-sizing:border-box}
-.principles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:20px}
-.principles div{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:16px}
-.principles b{display:block;margin-bottom:4px}
-.principles span{font-size:14px;color:var(--muted)}
-.portrait-fig{margin:0;max-width:100%}
-.portrait-svg{display:block;width:100%;height:auto;border-radius:4px;border:1px solid var(--line)}
-.portrait-fig figcaption,.ph figcaption{font-size:12px;color:var(--muted);margin-top:6px}
-.ph{margin:0;aspect-ratio:auto!important;border:0!important;background:none!important;padding:0!important;display:block!important}
-.ph svg{display:block;width:100%;height:auto;border-radius:4px;border:1px solid var(--line)}
-footer{padding-block:32px 48px;font-size:13px;color:var(--muted)}
-@media (max-width:640px){
-  .steps,.principles{grid-template-columns:1fr}
-  .profile{grid-template-columns:1fr}
-  .portrait-fig{max-width:180px}
-  .ch{grid-template-columns:1fr;gap:4px}
-  .photos{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .btn.ghost{margin-left:0}
-}
-@media (prefers-reduced-motion:reduce){.bar i{transition:none}}
+:root{--bg:#f6f3ee;--paper:#fdfbf8;--ink:#2a2724;--muted:#6f6860;--line:#e3ddd3;--hair:#d9cfbf;--accent:#3b4a47;--gold:#a88a55;--gold-soft:#efe6d6;
+--display:"Nanum Myeongjo",serif;--body:"Noto Sans KR",system-ui,sans-serif}
+@media (prefers-color-scheme:dark){:root{--bg:#161514;--paper:#1e1c1a;--ink:#ece7df;--muted:#aaa196;--line:#33302c;--hair:#4a4339;--accent:#c9d3cf;--gold:#cdb07a;--gold-soft:#2c2619;color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.85 var(--body);word-break:keep-all;overflow-wrap:anywhere;-webkit-font-smoothing:antialiased;
+ background-image:repeating-linear-gradient(0deg,transparent 0 47px,color-mix(in srgb,var(--hair) 35%,transparent) 47px 48px),repeating-linear-gradient(90deg,transparent 0 47px,color-mix(in srgb,var(--hair) 35%,transparent) 47px 48px)}
+a{color:var(--accent)}
+.wrap{max-width:900px;margin:0 auto;padding:0 16px}
+header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:20px 0}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink)}
+.brand b{font:700 18px var(--display);letter-spacing:.06em}.brand small{display:block;font-size:12px;color:var(--muted)}
+.cross{color:var(--gold)}
+h1,h2,h3{font-family:var(--display);line-height:1.45;margin:0 0 12px;text-wrap:balance}
+.btn{display:inline-flex;align-items:center;justify-content:center;background:var(--accent);color:var(--paper);border:1px solid var(--accent);border-radius:999px;padding:14px 32px;font:500 16px var(--body);text-decoration:none;letter-spacing:.02em}
+.btn.ghost{background:transparent;color:var(--accent);border-color:var(--hair)}
+.btn.small{padding:8px 18px;font-size:14px}
+.room{position:relative;background:var(--paper);border:1px solid var(--gold);outline:1px solid var(--hair);outline-offset:-10px;padding:64px 44px 52px;margin:8px 0 28px;box-shadow:0 18px 60px rgba(60,45,30,.10)}
+.hero{text-align:center}
+.hero .eyebrow{color:var(--gold);letter-spacing:.3em;font-size:13px;margin-bottom:12px}
+.hero h1{font-size:clamp(28px,5vw,40px);letter-spacing:.03em}
+.hero p{max-width:36em;margin:0 auto 26px;color:var(--muted)}
+.hero .ctas{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.badges{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:22px}
+.badges span{border:1px solid var(--hair);border-radius:999px;padding:4px 14px;font-size:13px;color:var(--muted);background:var(--bg)}
+.sec{text-align:center;margin:56px 0 24px}
+.sec h2{display:inline-flex;align-items:center;gap:16px;font-size:22px;letter-spacing:.12em;margin:0}
+.sec h2:before,.sec h2:after{content:"";width:44px;height:1px;background:var(--hair)}
+.sec p{color:var(--muted);margin:8px 0 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.item{background:var(--bg);border:1px solid var(--line);padding:20px 22px}
+.item b{display:block;font:700 17px var(--display);margin-bottom:6px}
+.item p{margin:0;font-size:15px;color:var(--muted)}
+.steps{counter-reset:s;display:grid;gap:14px;max-width:640px;margin:0 auto}
+.steps li{list-style:none;counter-increment:s;position:relative;padding:16px 18px 16px 64px;background:var(--bg);border:1px solid var(--line)}
+.steps li:before{content:counter(s);position:absolute;left:18px;top:14px;width:30px;height:30px;border:1px solid var(--gold);border-radius:50%;display:grid;place-items:center;font:700 15px var(--display);color:var(--gold)}
+.promise{max-width:640px;margin:0 auto;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:22px 8px;text-align:center;font:400 17px/1.95 var(--display)}
+details{background:var(--bg);border:1px solid var(--line);padding:14px 18px;margin-bottom:10px}
+details summary{cursor:pointer;font-weight:500}
+details p{margin:10px 0 0;color:var(--muted)}
+.cta-end{text-align:center;margin-top:48px}
+footer{text-align:center;color:var(--muted);font-size:13px;padding:10px 0 40px}
+footer a{color:inherit}
+@media (max-width:600px){.room{padding:44px 18px 36px;outline-offset:-7px}}
 </style>
-
 </head>
 <body>
-<div class="banner"><div class="wrap"><a href="/serve/" style="color:inherit">← 여의도순복음춘천교회 지역 섬김</a> · 준비 중인 사회사업 샘플 화면입니다 · 아래 인물과 이야기는 가상의 예시입니다 · <a href="/memorial/app/" style="color:inherit;font-weight:700;text-decoration:underline">우리 가족 기록 시작하기 →</a></div></div>
-
 <div class="wrap">
-  <header class="site">
-    <div class="brand">디지털 추모관<small>가칭 · 여의도순복음춘천교회 운영 · 전국 누구나 무료</small></div>
-    <nav class="top"><a href="#record">기록 남기기</a><a href="#sample">추모관 예시</a><a href="#ask">여쭤보기</a><a href="#principles">운영 원칙</a></nav>
-  </header>
+<header>
+  <a class="brand" href="/"><span class="cross" aria-hidden="true">✝</span><span><b>디지털 추모관</b><small>여의도순복음춘천교회 · 지역 섬김</small></span></a>
+  <a class="btn small ghost" href="/memorial/app/" onclick="memStart()">로그인</a>
+</header>
 
-  <div class="intro" id="record">
-    <h1>부모님의 이야기를, 부모님의 목소리 그대로</h1>
-    <p>글을 쓰실 필요가 없습니다. 질문에 말로 답하시면 생애 이야기와 사진이 정리되어 가족에게 남습니다. 소천하신 뒤에는 가족이 언제든 찾아오는 온라인 추모관이 됩니다. 이용료는 없습니다.</p>
-    <div class="steps">
-      <div class="step"><b>말로 답하기</b><span>휴대폰에서 질문을 듣고 편하게 이야기합니다. 한 번에 20분이면 충분합니다.</span></div>
-      <div class="step"><b>사진 올리기</b><span>사진을 올리고 "언제, 어디서, 누구와"를 말로 설명합니다.</span></div>
-      <div class="step"><b>가족이 확인하기</b><span>정리된 자서전을 가족이 읽고 고친 뒤 공개 범위를 정합니다.</span></div>
-    </div>
-    <a class="btn" href="#sample">추모관 예시 보기</a><a class="btn ghost" href="#principles">운영 원칙</a>
+<main class="room">
+  <section class="hero">
+    <div class="eyebrow">무 료 · 온 라 인 · 추 모 관</div>
+    <h1>사랑하는 분의 삶을<br>정성껏 남겨 드립니다</h1>
+    <p>부모님의 사진과 목소리, 걸어오신 믿음의 길과 가족에게 남기신 말씀을 한 곳에 모아 두세요. 오래전에 떠나신 분도, 지금 곁에 계신 부모님의 이야기도 기록할 수 있습니다.</p>
+    <div class="ctas"><a class="btn" href="/memorial/app/" onclick="memStart()">무료로 추모관 만들기</a><a class="btn ghost" href="/memorial/sample/">샘플 추모관 보기</a></div>
+    <div class="badges"><span>이용료 없음</span><span>광고 없음</span><span>카카오로 1분 시작</span><span>교회·종교 무관 누구나</span></div>
+  </section>
+
+  <div class="sec"><h2>이렇게 모십니다</h2><p>한 분의 삶을 담는 여섯 가지 방</p></div>
+  <div class="grid">
+    <div class="item"><b>영정과 소개</b><p>아치형 액자에 영정 사진을 모시고, 생몰일·고향·애송 말씀과 찬송을 함께 적습니다.</p></div>
+    <div class="item"><b>생애 이야기</b><p>태어나신 곳부터 가정을 이루고 신앙을 지켜 오신 길까지, 시기별 이야기로 정리합니다.</p></div>
+    <div class="item"><b>생전 목소리</b><p>질문에 답하신 부모님의 실제 목소리를 녹음해 두면, 언제든 다시 들을 수 있습니다.</p></div>
+    <div class="item"><b>남기신 말씀</b><p>"밥은 먹고 다니냐" — 평소 가족에게 하시던 말씀과 당부를 인용구로 간직합니다.</p></div>
+    <div class="item"><b>추억 사진첩</b><p>사진을 장수 제한 없이 올리고, 연도와 설명을 붙여 크게 넘겨 볼 수 있습니다.</p></div>
+    <div class="item"><b>함께한 추억과 위로</b><p>가족과 교우, 친구들이 각자의 추억과 사진, 위로의 말을 남길 수 있습니다.</p></div>
   </div>
 
-  <section id="sample">
-    <div class="eyebrow">추모관 예시</div>
-    <div class="profile">
-      <figure class="portrait-fig"><svg class="portrait-svg" viewBox="0 0 300 400" role="img" aria-label="가상 인물 일러스트 영정 사진">
-<defs><linearGradient id="pbg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#dfe6e2"/><stop offset="1" stop-color="#b9c7c1"/></linearGradient></defs>
-<rect width="300" height="400" fill="url(#pbg)"/>
-<rect x="10" y="10" width="280" height="380" fill="none" stroke="#7d8c86" stroke-width="2"/>
-<path d="M40 400 C50 300 100 275 150 275 C200 275 250 300 260 400 Z" fill="#3e4f5a"/>
-<path d="M120 282 L150 330 L180 282 Z" fill="#f2efe8"/>
-<path d="M150 330 L132 400 M150 330 L168 400" stroke="#2e3c45" stroke-width="3"/>
-<rect x="132" y="235" width="36" height="50" rx="10" fill="#e8c9aa"/>
-<ellipse cx="150" cy="185" rx="58" ry="70" fill="#efd3b6"/>
-<path d="M92 175 C92 115 125 100 150 100 C178 100 210 115 208 175 C200 140 182 128 150 128 C120 128 100 140 92 175 Z" fill="#c9cdd0"/>
-<circle cx="150" cy="104" r="20" fill="#bfc4c7"/>
-<path d="M120 180 q10 -6 20 0 M160 180 q10 -6 20 0" stroke="#5a4636" stroke-width="3" fill="none" stroke-linecap="round"/>
-<path d="M118 196 q6 5 14 2 M168 198 q8 3 14 -2" stroke="#c9a487" stroke-width="2" fill="none"/>
-<path d="M132 222 q18 14 36 0" stroke="#a5644f" stroke-width="3" fill="none" stroke-linecap="round"/>
-<path d="M148 190 q-4 14 2 18" stroke="#c9a487" stroke-width="2" fill="none"/>
-<ellipse cx="120" cy="212" rx="10" ry="6" fill="#e6b39a" opacity=".5"/><ellipse cx="180" cy="212" rx="10" ry="6" fill="#e6b39a" opacity=".5"/>
-<path d="M0 0 L60 0 L0 60 Z M300 0 L240 0 L300 60 Z" fill="#2b2b2b" opacity=".85"/>
-</svg><figcaption>일러스트 · 가상 인물</figcaption></figure>
-      <div>
-        <h2>김은혜 권사 (예시)</h2>
-        <div class="dates">1938. 4. 12 ~ 2025. 11. 3 · 향년 87세</div>
-        <blockquote class="verse">"내가 선한 싸움을 싸우고 나의 달려갈 길을 마치고 믿음을 지켰으니"<cite>디모데후서 4:7 · 생전에 가장 좋아하신 말씀</cite></blockquote>
-        <div class="facts"><span class="chip">강원 홍천 출생</span><span class="chip">3남 2녀의 어머니</span><span class="chip">새벽기도 40년</span><span class="chip">애송 찬송 · 내 주를 가까이 하게 함은</span></div>
-      </div>
-    </div>
+  <div class="sec"><h2>시작하는 방법</h2></div>
+  <ol class="steps">
+    <li><b>카카오로 로그인</b> — 별도 회원가입 없이 카카오 계정으로 바로 시작합니다.</li>
+    <li><b>추모관 만들기</b> — 성함과 사진만 있으면 됩니다. 최근에 받은 부고장이 있으면 사진을 올려 한 번에 채울 수도 있습니다.</li>
+    <li><b>가족과 함께 채우기</b> — 사진, 이야기, 남기신 말씀을 천천히 더하고, 공개 범위를 정해 가족·지인과 나눕니다.</li>
+  </ol>
 
-    <h3 style="margin-top:36px;font-size:22px">생애의 장</h3>
-    <div class="chapters">
-      <div class="ch"><div class="yr">1938 ~ 1956</div><div><h3>산골의 어린 시절</h3><p>홍천 산골에서 6남매의 맏딸로 자랐습니다. 동생들을 업고 십 리 길을 걸어 학교에 다녔다고 하셨습니다.</p><button class="voice" data-clip="0">▶ 육성으로 듣기 · 2분 14초</button></div></div>
-      <div class="ch"><div class="yr">1961</div><div><h3>결혼과 춘천 정착</h3><p>스물셋에 결혼해 춘천에 자리 잡으셨습니다. 단칸방에서 시작한 살림 이야기를 웃으며 들려주셨습니다.</p><button class="voice" data-clip="1">▶ 육성으로 듣기 · 3분 02초</button></div></div>
-      <div class="ch"><div class="yr">1979</div><div><h3>처음 교회에 나간 날</h3><p>막내가 크게 아팠던 해, 이웃 집사님의 손에 이끌려 처음 예배당에 들어섰습니다.</p><button class="voice" data-clip="2">▶ 육성으로 듣기 · 4분 31초</button></div></div>
-      <div class="ch"><div class="yr">1985 ~ 2024</div><div><h3>새벽을 지킨 40년</h3><p>비가 와도 눈이 와도 새벽 5시 예배당에 계셨습니다. 기도 수첩에는 자녀와 손주 열한 명의 이름이 적혀 있었습니다.</p><button class="voice" data-clip="3">▶ 육성으로 듣기 · 2분 48초</button></div></div>
-    </div>
+  <div class="sec"><h2>저희의 약속</h2></div>
+  <div class="promise">고인의 목소리를 흉내 내거나, 하지 않으신 말씀을 지어내지 않습니다.<br>남는 것은 오직 가족이 직접 올린 사진과 실제 목소리, 그리고 기억입니다.<br>기록은 기본적으로 <b>가족만</b> 볼 수 있고, 언제든 내려받거나 삭제할 수 있습니다.</div>
 
-    <h3 style="margin-top:36px;font-size:22px">사진</h3>
-    <div class="photos">
-      <figure class="ph"><svg viewBox="0 0 200 200" role="img" aria-label="1964년 돌잔치 가상 일러스트"><rect width="200" height="200" fill="#e9dcc3"/><rect x="0" y="130" width="200" height="70" fill="#cdb48c"/><rect x="40" y="120" width="120" height="14" fill="#8a5a3c"/><rect x="70" y="96" width="60" height="24" fill="#f3efe6"/><rect x="74" y="80" width="52" height="16" fill="#e7a6a0"/><rect x="78" y="66" width="44" height="14" fill="#f3efe6"/><circle cx="100" cy="150" r="12" fill="#f0d1b4"/><path d="M84 200 q16 -40 32 0 Z" fill="#d9534f"/><circle cx="45" cy="70" r="14" fill="#f0d1b4"/><path d="M25 130 q20 -60 40 0 Z" fill="#5d6f7a"/><circle cx="155" cy="66" r="14" fill="#f0d1b4"/><path d="M135 130 q20 -62 40 0 Z" fill="#9b7fa6"/><rect width="200" height="200" fill="#8a6a3a" opacity=".12"/></svg><figcaption>1964 · 첫째 돌잔치</figcaption></figure>
-<figure class="ph"><svg viewBox="0 0 200 200" role="img" aria-label="1979년 첫 예배 후 가상 일러스트"><rect width="200" height="200" fill="#dfe7ec"/><rect x="0" y="150" width="200" height="50" fill="#b7c3a3"/><path d="M60 150 V90 L100 60 L140 90 V150 Z" fill="#f4f1ea" stroke="#7d8790"/><path d="M100 60 V30 M90 40 H110" stroke="#7d8790" stroke-width="4"/><rect x="88" y="115" width="24" height="35" fill="#8a6a4f"/><circle cx="40" cy="138" r="8" fill="#f0d1b4"/><path d="M30 175 q10 -36 20 0 Z" fill="#6c7f92"/><circle cx="160" cy="136" r="8" fill="#f0d1b4"/><path d="M150 175 q10 -38 20 0 Z" fill="#b0866a"/><circle cx="174" cy="146" r="6" fill="#f0d1b4"/><path d="M167 175 q7 -26 14 0 Z" fill="#e3b04b"/><rect width="200" height="200" fill="#7a6a4a" opacity=".1"/></svg><figcaption>1979 · 첫 예배 후</figcaption></figure>
-<figure class="ph"><svg viewBox="0 0 200 200" role="img" aria-label="1998년 회갑 잔치 가상 일러스트"><rect width="200" height="200" fill="#f1e6d6"/><rect x="20" y="22" width="160" height="30" fill="#c0392b"/><rect x="0" y="140" width="200" height="60" fill="#d8c3a3"/><rect x="20" y="128" width="160" height="16" fill="#7b4b31"/><circle cx="50" cy="118" r="8" fill="#e8a33d"/><circle cx="150" cy="118" r="8" fill="#e8a33d"/><circle cx="80" cy="78" r="13" fill="#f0d1b4"/><path d="M80 66 q-14 2 -12 14 M80 66 q14 2 12 14" stroke="#c9cdd0" stroke-width="5" fill="none"/><path d="M60 128 q20 -50 40 0 Z" fill="#7b9eb8"/><circle cx="122" cy="78" r="13" fill="#f0d1b4"/><path d="M110 70 q12 -10 24 0" stroke="#9aa0a3" stroke-width="5" fill="none"/><path d="M102 128 q20 -50 40 0 Z" fill="#4c5a63"/><rect width="200" height="200" fill="#8a6a3a" opacity=".08"/></svg><figcaption>1998 · 회갑 잔치</figcaption></figure>
-<figure class="ph"><svg viewBox="0 0 200 200" role="img" aria-label="2019년 손주들과 가상 일러스트"><rect width="200" height="200" fill="#dcebf2"/><circle cx="165" cy="38" r="16" fill="#f6d36b"/><rect x="0" y="140" width="200" height="60" fill="#9cc58f"/><circle cx="70" cy="86" r="14" fill="#f0d1b4"/><path d="M58 80 q12 -18 24 0" stroke="#c9cdd0" stroke-width="7" fill="none"/><path d="M48 150 q22 -56 44 0 Z" fill="#8f6fa0"/><circle cx="112" cy="108" r="10" fill="#f0d1b4"/><path d="M100 150 q12 -38 24 0 Z" fill="#e3735e"/><circle cx="140" cy="112" r="9" fill="#f0d1b4"/><path d="M130 150 q10 -32 20 0 Z" fill="#4f8fc0"/><circle cx="164" cy="116" r="8" fill="#f0d1b4"/><path d="M156 150 q8 -28 16 0 Z" fill="#f2b53a"/></svg><figcaption>2019 · 손주들과</figcaption></figure>
-    </div>
-  </section>
+  <div class="sec"><h2>자주 묻는 질문</h2></div>
+  <div style="max-width:680px;margin:0 auto">
+    <details><summary>정말 무료인가요?</summary><p>네. 여의도순복음춘천교회가 지역 섬김 사역으로 비영리 운영하며, 이용료와 광고가 없습니다.</p></details>
+    <details><summary>교회에 다니지 않아도 만들 수 있나요?</summary><p>네. 종교와 지역에 관계없이 누구나 이용하실 수 있습니다.</p></details>
+    <details><summary>돌아가신 지 오래된 분도 모실 수 있나요?</summary><p>네. 날짜를 정확히 모르셔도 비워 두고 만드실 수 있고, 남아 있는 사진과 가족의 기억으로 채워 가시면 됩니다.</p></details>
+    <details><summary>살아 계신 부모님의 이야기도 기록할 수 있나요?</summary><p>네. 생전에 목소리와 이야기를 미리 남겨 두시는 분들이 많습니다. 소천일 칸을 비워 두면 '생애의 기록'으로 표시됩니다.</p></details>
+    <details><summary>누가 볼 수 있나요?</summary><p>기본은 가족만 보기입니다. 필요하면 '로그인한 이용자' 또는 '전체 공개'로 바꿔 지인들이 추억과 위로의 말을 남기게 할 수 있습니다.</p></details>
+  </div>
 
-  <section id="ask">
-    <div class="eyebrow">여쭤보기</div>
-    <h2 style="font-size:26px">궁금한 것을 고르면, 생전에 하신 말씀을 찾아 들려드립니다</h2>
-    <p style="color:var(--muted);max-width:60ch;margin-top:10px">AI가 새 말을 만들지 않습니다. 녹음해 두신 답변 가운데 질문에 가장 가까운 것을 찾아 실제 육성으로 재생합니다.</p>
-    <div class="ask">
-      <label>질문을 골라 보세요</label>
-      <div class="qs" id="qs">
-        <button type="button" aria-pressed="true" data-a="0">힘드실 때 어떻게 버티셨어요?</button>
-        <button type="button" aria-pressed="false" data-a="1">아버지를 처음 만난 날은요?</button>
-        <button type="button" aria-pressed="false" data-a="2">손주들에게 남기고 싶은 말씀은요?</button>
-        <button type="button" aria-pressed="false" data-a="3">가장 감사했던 일은요?</button>
-      </div>
-      <div class="answer" aria-live="polite">
-        <div class="meta" id="meta">2024년 3월 녹음 · 3회차 인터뷰 중</div>
-        <blockquote id="quote">"힘들 때는 그냥 엎드렸지. 새벽에 교회 가서 아무 말도 못 하고 울기만 한 날도 많아. 그래도 일어나 보면 또 하루를 살 힘이 있더라."</blockquote>
-        <div class="play"><button type="button" id="playBtn" aria-label="육성 재생">▶</button><div class="bar"><i id="prog"></i></div><span class="dates" id="len">0:42</span></div>
-        <div class="note">샘플에서는 소리가 나지 않습니다. 실제 서비스에서는 이 자리에 녹음 원본이 재생됩니다.</div>
-      </div>
-    </div>
-  </section>
-
-  <section id="guestbook">
-    <div class="eyebrow">추모의 글</div>
-    <div class="book" id="book">
-      <div class="entry"><b>큰아들</b><span>2025. 11. 23</span><p>어머니, 새벽마다 저희 이름을 부르며 기도하시던 그 목소리를 여기서 다시 듣습니다.</p></div>
-      <div class="entry"><b>손녀 지은</b><span>2025. 12. 25</span><p>할머니가 들려주신 십 리 길 이야기를 제 아이에게도 들려줄게요.</p></div>
-    </div>
-    <form class="write" id="write">
-      <input id="gname" placeholder="이름" maxlength="20" aria-label="이름">
-      <textarea id="gtext" rows="3" placeholder="추모의 글을 남겨 주세요 (샘플에서는 이 화면에만 표시됩니다)" aria-label="추모의 글"></textarea>
-      <button class="btn" style="margin-top:0;justify-self:start" type="submit">글 남기기</button>
-    </form>
-  </section>
-
-  <section id="principles">
-    <div class="eyebrow">운영 원칙</div>
-    <h2 style="font-size:26px">고인의 말씀은 고인의 말씀 그대로</h2>
-    <div class="principles">
-      <div><b>목소리를 복제하지 않습니다</b><span>AI가 고인의 목소리로 새 말을 만들어 대화하는 기능은 두지 않습니다.</span></div>
-      <div><b>기본은 가족만 보기</b><span>공개 범위는 본인 또는 가족이 비공개 · 교회 · 전체 중에서 정합니다.</span></div>
-      <div><b>이용료가 없습니다</b><span>상조 상품 연결이나 수수료 없이 교회가 비영리로 운영합니다.</span></div>
-      <div><b>언제든 내려받기</b><span>녹음 원본과 사진, 자서전 전체를 가족이 언제든 받아 갈 수 있습니다.</span></div>
-    </div>
-  </section>
-
-  <footer>디지털 추모관(가칭) · 운영 여의도순복음춘천교회 · 강원특별자치도 춘천시 동내면 동내로 17 · 033-264-5111<br>이 화면은 기획 검토용 샘플이며 실제 서비스가 아닙니다.</footer>
+  <div class="cta-end"><h2 style="font-size:22px">오늘, 한 장의 사진으로 시작해 보세요</h2><a class="btn" href="/memorial/app/" onclick="memStart()">무료로 추모관 만들기</a></div>
+</main>
+<footer>운영: <a href="/">여의도순복음춘천교회</a> (여의도순복음교회 직할지교회) · 강원 춘천시 동내면 · 033-264-5111 · <a href="/privacy/">개인정보처리방침</a></footer>
 </div>
-
-<script>
-const answers=[
- {m:"2024년 3월 녹음 · 3회차 인터뷰 중",q:"\"힘들 때는 그냥 엎드렸지. 새벽에 교회 가서 아무 말도 못 하고 울기만 한 날도 많아. 그래도 일어나 보면 또 하루를 살 힘이 있더라.\"",l:"0:42"},
- {m:"2024년 2월 녹음 · 2회차 인터뷰 중",q:"\"장날이었어. 너희 아버지가 내 보따리를 들어 준다고 따라오는데, 얼마나 쑥스럽던지 몰라.\"",l:"1:05"},
- {m:"2024년 4월 녹음 · 5회차 인터뷰 중",q:"\"공부 잘하는 것보다 사람한테 따뜻한 게 더 귀해. 그리고 하나님 손 놓지 말고 살아라.\"",l:"0:38"},
- {m:"2024년 4월 녹음 · 5회차 인터뷰 중",q:"\"막내가 살아난 거. 그 일로 내가 하나님을 만났으니, 아픈 것도 다 감사지.\"",l:"0:51"}];
-let timer=null;
-const qs=document.getElementById('qs'),prog=document.getElementById('prog'),btn=document.getElementById('playBtn');
-function stop(){clearInterval(timer);timer=null;prog.style.width='0';btn.textContent='▶';btn.setAttribute('aria-label','육성 재생')}
-qs.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
- qs.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));
- const a=answers[+b.dataset.a];document.getElementById('meta').textContent=a.m;document.getElementById('quote').textContent=a.q;document.getElementById('len').textContent=a.l;stop()});
-btn.addEventListener('click',()=>{if(timer){stop();return}let w=0;btn.textContent='❚❚';btn.setAttribute('aria-label','정지');
- timer=setInterval(()=>{w+=4;prog.style.width=w+'%';if(w>=100)stop()},200)});
-document.querySelectorAll('.voice').forEach(v=>v.addEventListener('click',()=>{document.getElementById('ask').scrollIntoView({behavior:'smooth'})}));
-document.getElementById('write').addEventListener('submit',e=>{e.preventDefault();
- const n=document.getElementById('gname').value.trim()||'익명',t=document.getElementById('gtext').value.trim();if(!t)return;
- const d=document.createElement('div');d.className='entry';const now=new Date();
- d.innerHTML='<b></b><span></span><p></p>';d.querySelector('b').textContent=n;d.querySelector('span').textContent=now.getFullYear()+'. '+(now.getMonth()+1)+'. '+now.getDate();d.querySelector('p').textContent=t;
- document.getElementById('book').appendChild(d);e.target.reset()});
-</script>
-
 </body>
 </html>

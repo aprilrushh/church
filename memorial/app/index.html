@@ -6,6 +6,8 @@
 <meta name="robots" content="noindex">
 <title>디지털 추모관 · 기록하기</title>
 <link rel="icon" href="/images/logo.png">
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-18531482947"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','AW-18531482947');window.MEM_CONV='';</script>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Nanum+Myeongjo:wght@400;700&family=Noto+Sans+KR:wght@400;500;700&display=swap">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <style>
@@ -169,7 +171,7 @@ function fmtDate(d){if(!d)return '';const [y,m,dd]=d.split('-');return `${y}. ${
 
 async function boot(){
   try{cfg=await (await fetch('/api/config')).json()}catch{cfg={}}
-  if(!cfg.supabaseUrl||!cfg.supabaseAnonKey){$('#main').innerHTML='<div class="card"><h2>준비 중입니다</h2><p class="muted">서버 연결 설정(Supabase)이 아직 끝나지 않았습니다. 관리자에게 문의해 주세요.</p><p><a class="btn ghost" href="/memorial/">샘플 화면 보기</a></p></div>';return}
+  if(!cfg.supabaseUrl||!cfg.supabaseAnonKey){$('#main').innerHTML='<div class="card"><h2>준비 중입니다</h2><p class="muted">서버 연결 설정(Supabase)이 아직 끝나지 않았습니다. 관리자에게 문의해 주세요.</p><p><a class="btn ghost" href="/memorial/sample/">샘플 화면 보기</a></p></div>';return}
   sb=supabase.createClient(cfg.supabaseUrl,cfg.supabaseAnonKey);
   const {data}=await sb.auth.getSession();session=data.session;
   sb.auth.onAuthStateChange((_e,s)=>{session=s;renderAuth();route()});
@@ -196,7 +198,7 @@ function loginPage(){
     <h1>사랑하는 분의 삶을<br>정성껏 남겨 드립니다</h1>
     <p class="muted" style="max-width:46ch;margin:0 auto 24px">목소리와 사진, 걸어오신 믿음의 길을 가족과 함께 기록하세요. 기록은 기본적으로 가족만 볼 수 있으며, 이용료는 없습니다.</p>
     <button class="btn kakao" id="kakao">카카오로 추모관 만들기</button>
-    <p class="muted" style="margin-top:20px"><a href="/memorial/">샘플 화면 먼저 보기</a></p></div>`;
+    <p class="muted" style="margin-top:20px"><a href="/memorial/sample/">샘플 화면 먼저 보기</a></p></div>`;
   $('#kakao').onclick=()=>sb.auth.signInWithOAuth({provider:'kakao',options:{redirectTo:location.origin+'/memorial/app/'}});
 }
 
@@ -270,7 +272,7 @@ async function editInfo(m){
     try{
       let id=m.id;
       if(isNew){row.owner_id=session.user.id;row.consent_at=new Date().toISOString();
-        const {data,error}=await sb.from('memorials').insert(row).select('id').single();if(error)throw error;id=data.id}
+        const {data,error}=await sb.from('memorials').insert(row).select('id').single();if(error)throw error;id=data.id;try{gtag('event','memorial_created');if(window.MEM_CONV)gtag('event','conversion',{send_to:window.MEM_CONV})}catch(e){}}
       else{const {error}=await sb.from('memorials').update(row).eq('id',id);if(error)throw error}
       const file=$('#f-portrait').files[0];
       if(file){const p=`${id}/portrait-${Date.now()}.${(file.name.split('.').pop()||'jpg').toLowerCase()}`;
