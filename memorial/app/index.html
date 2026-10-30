@@ -290,7 +290,8 @@ async function editPage(id){
    <div class="tabs" role="tablist">${['녹음','생애의 장','남기신 말씀','사진','기본 정보'].map((t,i)=>`<button role="tab" data-t="${i}" aria-selected="${i===0}">${t}</button>`).join('')}</div><div id="tab"></div>`;
   const tabs=[()=>tabRec(m),()=>tabChapters(m),()=>tabSayings(m),()=>tabPhotos(m),()=>editInfo(m)];
   document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tabs button').forEach(x=>x.setAttribute('aria-selected',x===b));tabs[+b.dataset.t]()});
-  tabRec(m);
+  let t0=0;try{t0=+(sessionStorage.getItem('memTab')||0);sessionStorage.removeItem('memTab')}catch{}
+  document.querySelector(`.tabs button[data-t="${t0}"]`).click();
 }
 
 let mediaRec=null, chunks=[], recStart=0;
@@ -403,6 +404,7 @@ async function tabPhotos(m){
     list.appendChild(f)}
 }
 
+function emptyBox(msg,tab,id){return `<div class="notice" style="text-align:center">${msg} <a href="#edit-${id}" onclick="try{sessionStorage.setItem('memTab','${tab}')}catch{}">지금 추가하기 →</a></div>`}
 function lightbox(items,i){
   const o=document.createElement('div');o.className='lightbox';o.setAttribute('role','dialog');o.setAttribute('aria-modal','true');
   const show=()=>{o.innerHTML=`<img src="${esc(items[i].url)}" alt=""><div class="cap">${esc(items[i].cap||'')}</div><button class="close" aria-label="닫기">×</button>${items.length>1?'<button class="nav prev" aria-label="이전">‹</button><button class="nav next" aria-label="다음">›</button>':''}`;
@@ -437,9 +439,9 @@ async function viewPage(id){
      ${m.intro?`<p class="intro">${esc(m.intro).replace(/\n/g,'<br>')}</p>`:''}
      ${(m.hymn||m.chief_mourners||m.funeral_info)?`<div class="facts">${m.hymn?`<div><b>애송 찬송</b>${esc(m.hymn)}</div>`:''}${m.chief_mourners?`<div><b>상주 · 유족</b>${esc(m.chief_mourners)}</div>`:''}${m.funeral_info?`<div><b>장례 일정</b>${esc(m.funeral_info)}</div>`:''}</div>`:''}
    </section>
-   <div class="sec"><h2>생애</h2></div><div id="chs" class="timeline">${(chs||[]).length?'':'<p class="muted">아직 공개된 장이 없습니다.</p>'}</div>
-   ${(ss||[]).filter(x=>x.body).length?`<div class="sec"><h2>남기신 말씀</h2><p class="muted">가족에게 늘 하시던 말씀</p></div><div class="sayings">${ss.filter(x=>x.body).map(x=>`<div class="saying"><p>${esc(x.body).replace(/\n/g,'<br>')}</p>${x.context?`<div class="ctx">— ${esc(x.context)}</div>`:''}</div>`).join('')}</div>`:''}
-   ${(ps||[]).length?`<div class="sec"><h2>사진</h2><p class="muted">${ps.length}장의 추억</p></div><div class="thumbs" id="phs"></div>`:''}
+   <div class="sec"><h2>생애</h2></div>${(chs||[]).length?'<div id="chs" class="timeline"></div>':(canEdit?emptyBox('아직 확인을 마친 생애의 장이 없습니다.',1,id):'<p class="muted" style="text-align:center">아직 공개된 이야기가 없습니다.</p>')+'<div id="chs" hidden></div>'}
+   ${!(ss||[]).filter(x=>x.body).length&&canEdit?`<div class="sec"><h2>남기신 말씀</h2><p class="muted">가족에게 늘 하시던 말씀</p></div>${emptyBox('평소 하시던 말씀을 남겨 보세요.',2,id)}`:''}${(ss||[]).filter(x=>x.body).length?`<div class="sec"><h2>남기신 말씀</h2><p class="muted">가족에게 늘 하시던 말씀</p></div><div class="sayings">${ss.filter(x=>x.body).map(x=>`<div class="saying"><p>${esc(x.body).replace(/\n/g,'<br>')}</p>${x.context?`<div class="ctx">— ${esc(x.context)}</div>`:''}</div>`).join('')}</div>`:''}
+   ${!(ps||[]).length&&canEdit?`<div class="sec"><h2>사진</h2></div>${emptyBox('추억이 담긴 사진을 올려 보세요.',3,id)}`:''}${(ps||[]).length?`<div class="sec"><h2>사진</h2><p class="muted">${ps.length}장의 추억</p></div><div class="thumbs" id="phs"></div>`:''}
    ${(recs||[]).length&&cfg.aiEnabled&&session?`<div class="sec"><h2>여쭤보기</h2></div><div class="card"><p class="muted">궁금한 것을 적으면 생전에 남기신 실제 녹음 가운데 가장 가까운 답을 찾아 들려드립니다. 새로 지어낸 말은 없습니다.</p>
      <div class="row"><input id="askq" placeholder="예: 힘드실 때 어떻게 버티셨어요?" style="flex:1"><button class="btn" id="askb">찾기</button></div><div id="aska"></div></div>`:''}
    <div class="sec"><h2>함께한 추억</h2><p class="muted">고인과 함께했던 기억과 사진을 나누어 주세요</p></div><div class="memories" id="mems"></div>
