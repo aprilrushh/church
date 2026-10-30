@@ -230,16 +230,16 @@ async function readObit(f){
     set('#f-name',j.name);set('#f-title',j.title);set('#f-birth',/^\d{4}-\d{2}-\d{2}$/.test(j.birth_date||'')?j.birth_date:'');
     set('#f-death',/^\d{4}-\d{2}-\d{2}$/.test(j.death_date||'')?j.death_date:'');set('#f-home',j.hometown);
     set('#f-mourn',j.chief_mourners);set('#f-funeral',j.funeral_info);set('#f-verse',j.verse);set('#f-vref',j.verse_ref);
-    msg.textContent='채웠습니다. 내용을 확인하고 고친 뒤 저장해 주세요.';toast('부고장 내용을 채웠습니다. 확인 후 저장해 주세요.');
+    document.querySelectorAll('details.opt').forEach(d=>{if(d.querySelector('#f-mourn'))d.open=true});msg.textContent='아래 칸에 채웠습니다. 내용을 확인하고 고친 뒤 맨 아래 저장(만들기)을 눌러 주세요.';toast('부고장 내용을 채웠습니다. 확인 후 저장해 주세요.');
   }catch(e){msg.textContent='';toast('부고장을 읽지 못했습니다: '+e.message)}
 }
 async function editInfo(m){
   m=m||{visibility:'private'};
   const isNew=!m.id;
   const html=`<div class="card"><h2>${isNew?'추모관 만들기':'기본 정보'}</h2>
-   ${cfg.aiEnabled&&isNew?`<details class="opt"><summary>최근에 소천하셔서 부고장이 있으신가요? (선택)</summary>
+   ${cfg.aiEnabled?`<details class="opt"${isNew?'':''}><summary>부고장이 있으신가요? 올리면 아래 칸을 자동으로 채워 드립니다 (선택)</summary>
     <p class="muted" style="margin:6px 0 10px">부고장 사진이나 PDF를 올리면 성함·직분·날짜·상주·장례 일정을 아래 칸에 채워 드립니다. 저장 전에 꼭 확인해 주세요. 부고장 파일은 보관하지 않습니다.</p>
-    <input id="f-obit" type="file" accept="image/*,application/pdf"> <span id="obit-msg" class="muted"></span></details>`:''}
+    <div class="row" style="margin-top:4px"><input id="f-obit" type="file" accept="image/*,application/pdf" style="flex:1;min-width:220px"><button type="button" class="btn" id="obit-apply" disabled>적용하기</button></div><div id="obit-msg" class="muted" style="margin-top:8px"></div></details>`:''}
    <div class="grid2">
     <div><label for="f-name">성함 *</label><input id="f-name" value="${esc(m.name)}" maxlength="40"></div>
     <div><label for="f-title">직분·호칭</label><input id="f-title" value="${esc(m.title)}" placeholder="예: 권사, 장로, 성도"></div>
@@ -259,7 +259,7 @@ async function editInfo(m){
    ${isNew?`<label style="display:flex;gap:8px;align-items:flex-start;color:var(--ink)"><input type="checkbox" id="f-consent" style="width:auto;margin-top:6px"> 본인 또는 가족으로서 이 기록을 남기는 데 동의하며, 녹음과 사진을 교회 디지털 추모관에 보관하는 것에 동의합니다. 언제든 내려받거나 삭제를 요청할 수 있습니다.</label>`:''}
    <div class="row" style="margin-top:16px"><button class="btn" id="save">${isNew?'만들기':'저장'}</button>${isNew?'<a class="btn ghost" href="#">취소</a>':''}</div></div>`;
   if(isNew)$('#main').innerHTML=html;else $('#tab').innerHTML=html;
-  const ob=$('#f-obit');if(ob)ob.onchange=()=>readObit(ob.files[0]);
+  const ob=$('#f-obit'),oa=$('#obit-apply');if(ob){ob.onchange=()=>{oa.disabled=!ob.files[0];$('#obit-msg').textContent=ob.files[0]?'파일을 골랐습니다. 적용하기를 눌러 주세요.':''};oa.onclick=async()=>{oa.disabled=true;oa.textContent='읽는 중…';await readObit(ob.files[0]);oa.textContent='적용하기';oa.disabled=false}}
   $('#save').onclick=async()=>{
     const name=$('#f-name').value.trim();if(!name)return toast('성함을 입력해 주세요.');
     if(isNew&&!$('#f-consent').checked)return toast('동의에 체크해 주세요.');
