@@ -476,11 +476,11 @@ async function viewPage(id){
   let kind='memory';
   document.querySelectorAll('#gbform .seg button').forEach(b=>b.onclick=()=>{kind=b.dataset.k;document.querySelectorAll('#gbform .seg button').forEach(x=>x.setAttribute('aria-pressed',x===b));
     const mem=kind==='memory';$('#memonly').hidden=!mem;$('#memphoto').hidden=!mem;$('#gbtl').textContent=mem?'추억':'위로의 말';$('#gbt').placeholder=mem?'고인과 함께했던 기억을 들려주세요':'유가족께 전하고 싶은 위로의 말씀을 적어 주세요'});
-  if($('#gbs'))$('#gbs').onclick=async()=>{const body=$('#gbt').value.trim();if(!body)return toast('내용을 적어 주세요.');const btn=$('#gbs');btn.disabled=true;
+  if($('#gbs'))$('#gbs').onclick=async()=>{const body=$('#gbt').value.trim();const hasPhoto=kind==='memory'&&$('#gbp').files[0];if(!body&&!hasPhoto){alert(kind==='memory'?'추억 글을 적거나 사진을 골라 주세요.':'위로의 말을 적어 주세요.');return}const btn=$('#gbs');btn.disabled=true;btn.textContent='올리는 중…';
     let photo_path=null;const f=kind==='memory'&&$('#gbp').files[0];
     if(f){const {blob,ext}=await shrinkForUpload(f);photo_path=`${id}/guest/${session.user.id}/${Date.now()}.${ext}`;
-      const {error:e1}=await sb.storage.from('memorial-media').upload(photo_path,blob,{contentType:blob.type||undefined});if(e1){btn.disabled=false;return toast('사진을 올리지 못했습니다: '+e1.message)}}
-    const {error}=await sb.from('guestbook').insert({memorial_id:id,author_id:session.user.id,author_name:$('#gbn').value.trim()||'익명',body,kind,photo_path,memory_when:kind==='memory'?($('#gby').value.trim()||null):null});btn.disabled=false;
+      const {error:e1}=await sb.storage.from('memorial-media').upload(photo_path,blob,{contentType:blob.type||undefined});if(e1){btn.disabled=false;btn.textContent='올리기';alert('사진을 올리지 못했습니다: '+e1.message);return}}
+    const {error}=await sb.from('guestbook').insert({memorial_id:id,author_id:session.user.id,author_name:$('#gbn').value.trim()||'익명',body,kind,photo_path,memory_when:kind==='memory'?($('#gby').value.trim()||null):null});btn.disabled=false;btn.textContent='올리기';if(error)alert('올리지 못했습니다: '+error.message);
     if(error)toast(error.message);else viewPage(id)};
   if($('#askb'))$('#askb').onclick=async()=>{const q=$('#askq').value.trim();if(!q)return;$('#aska').innerHTML='<p class="muted">찾는 중…</p>';
     try{const j=await api('ask',{memorial_id:id,question:q});const r=recMap[j.recording_id];
