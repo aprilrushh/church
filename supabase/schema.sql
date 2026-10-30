@@ -156,3 +156,14 @@ create policy media_delete on storage.objects for delete
 -- 부고장 정보(상주·장례 일정)
 alter table public.memorials add column if not exists chief_mourners text;
 alter table public.memorials add column if not exists funeral_info text;
+
+-- 남기신 말씀 / 방문자 추억(사진 포함)
+create table if not exists public.sayings (id uuid primary key default gen_random_uuid(), memorial_id uuid not null references public.memorials(id) on delete cascade, body text not null default '', context text, sort int not null default 0, created_at timestamptz not null default now());
+alter table public.sayings enable row level security;
+drop policy if exists sayings_select on public.sayings; create policy sayings_select on public.sayings for select using (public.can_view(memorial_id));
+drop policy if exists sayings_write on public.sayings; create policy sayings_write on public.sayings for all using (public.can_edit(memorial_id)) with check (public.can_edit(memorial_id));
+alter table public.guestbook add column if not exists kind text not null default 'comfort';
+alter table public.guestbook add column if not exists photo_path text;
+alter table public.guestbook add column if not exists memory_when text;
+drop policy if exists media_guest_write on storage.objects; create policy media_guest_write on storage.objects for insert with check (bucket_id = 'memorial-media' and (storage.foldername(name))[2] = 'guest' and (storage.foldername(name))[3] = auth.uid()::text and public.can_view(((storage.foldername(name))[1])::uuid));
+drop policy if exists media_guest_delete on storage.objects; create policy media_guest_delete on storage.objects for delete using (bucket_id = 'memorial-media' and (storage.foldername(name))[2] = 'guest' and (storage.foldername(name))[3] = auth.uid()::text);

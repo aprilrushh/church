@@ -111,6 +111,31 @@ body{background-color:var(--bg);background-image:
 .niche .frame .portrait{border-radius:112px 112px 0 0}
 .room .floor{display:block;width:min(420px,80%);height:16px;margin:56px auto 0;color:var(--gold)}
 @media (max-width:600px){.room{padding:44px 18px 36px;outline-offset:-7px}.room .corner{width:30px;height:30px}.room .corner.tl,.room .corner.tr{top:10px}.room .corner.bl,.room .corner.br{bottom:10px}.room .corner.tl,.room .corner.bl{left:10px}.room .corner.tr,.room .corner.br{right:10px}}
+
+.sayings{display:grid;gap:16px}
+.saying{position:relative;background:var(--paper);border:1px solid var(--line);padding:26px 28px 18px 56px;box-shadow:var(--shadow)}
+.saying:before{content:"\201C";position:absolute;left:18px;top:6px;font:700 54px/1 var(--display);color:var(--gold);opacity:.7}
+.saying p{margin:0;font:400 18px/1.9 var(--display)}
+.saying .ctx{margin-top:8px;font-size:13px;color:var(--muted);text-align:right}
+.thumbs button{all:unset;cursor:zoom-in;display:block}
+.lightbox{position:fixed;inset:0;z-index:900;background:rgba(20,18,16,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px}
+.lightbox img{max-width:100%;max-height:82vh;object-fit:contain;box-shadow:0 10px 40px rgba(0,0,0,.4)}
+.lightbox .cap{color:#e9e2d6;margin-top:14px;font-family:var(--display);text-align:center}
+.lightbox .nav{position:absolute;top:50%;transform:translateY(-50%);background:none;border:1px solid rgba(255,255,255,.35);color:#fff;width:44px;height:44px;border-radius:50%;font-size:20px;cursor:pointer}
+.lightbox .prev{left:16px}.lightbox .next{right:16px}
+.lightbox .close{position:absolute;top:16px;right:16px;background:none;border:0;color:#fff;font-size:28px;cursor:pointer}
+.memories{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
+.memory{background:var(--paper);border:1px solid var(--line);box-shadow:var(--shadow);overflow:hidden}
+.memory img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;cursor:zoom-in}
+.memory .in{padding:16px 18px}
+.memory .yr{font-size:12px;color:var(--gold);letter-spacing:.12em}
+.memory p{margin:4px 0 10px;font-family:var(--display);line-height:1.85}
+.memory .from,.letter .from{font-size:13px;color:var(--muted);text-align:right}
+.seg{display:inline-flex;border:1px solid var(--hair);border-radius:999px;padding:3px;margin-bottom:6px}
+.seg button{border:0;background:none;padding:8px 18px;border-radius:999px;font:500 14px var(--body);color:var(--muted);cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--paper)}
+details.opt{border:1px solid var(--line);border-radius:4px;padding:12px 16px;margin:16px 0;background:var(--bg)}
+details.opt summary{cursor:pointer;font-weight:500}
 </style>
 </head>
 <body>
@@ -212,22 +237,23 @@ async function editInfo(m){
   m=m||{visibility:'private'};
   const isNew=!m.id;
   const html=`<div class="card"><h2>${isNew?'추모관 만들기':'기본 정보'}</h2>
-   ${cfg.aiEnabled?`<div class="card" style="background:var(--soft,#f3f1ec);margin:0 0 16px"><b>부고장으로 한 번에 채우기 (선택)</b>
+   ${cfg.aiEnabled&&isNew?`<details class="opt"><summary>최근에 소천하셔서 부고장이 있으신가요? (선택)</summary>
     <p class="muted" style="margin:6px 0 10px">부고장 사진이나 PDF를 올리면 성함·직분·날짜·상주·장례 일정을 아래 칸에 채워 드립니다. 저장 전에 꼭 확인해 주세요. 부고장 파일은 보관하지 않습니다.</p>
-    <input id="f-obit" type="file" accept="image/*,application/pdf"> <span id="obit-msg" class="muted"></span></div>`:''}
+    <input id="f-obit" type="file" accept="image/*,application/pdf"> <span id="obit-msg" class="muted"></span></details>`:''}
    <div class="grid2">
     <div><label for="f-name">성함 *</label><input id="f-name" value="${esc(m.name)}" maxlength="40"></div>
     <div><label for="f-title">직분·호칭</label><input id="f-title" value="${esc(m.title)}" placeholder="예: 권사, 장로, 성도"></div>
     <div><label for="f-birth">태어나신 날</label><input id="f-birth" type="date" value="${esc(m.birth_date)}"></div>
-    <div><label for="f-death">소천하신 날 (생전 기록이면 비워 두세요)</label><input id="f-death" type="date" value="${esc(m.death_date)}"></div>
+    <div><label for="f-death">소천하신 날 (모르시면 비워 두셔도 됩니다)</label><input id="f-death" type="date" value="${esc(m.death_date)}"></div>
     <div><label for="f-home">고향</label><input id="f-home" value="${esc(m.hometown)}"></div>
     <div><label for="f-hymn">애송 찬송</label><input id="f-hymn" value="${esc(m.hymn)}"></div>
    </div>
    <label for="f-verse">좋아하시는 말씀</label><textarea id="f-verse" style="min-height:60px">${esc(m.verse)}</textarea>
    <label for="f-vref">말씀 출처</label><input id="f-vref" value="${esc(m.verse_ref)}" placeholder="예: 디모데후서 4:7">
+   <details class="opt"${(m.chief_mourners||m.funeral_info)?' open':''}><summary>장례 정보 (선택)</summary>
    <label for="f-mourn">상주·유족</label><textarea id="f-mourn" style="min-height:60px" placeholder="예: 장남 홍길동&#10;장녀 홍길순">${esc(m.chief_mourners)}</textarea>
-   <label for="f-funeral">장례 일정 (빈소·발인·장지)</label><textarea id="f-funeral" style="min-height:60px">${esc(m.funeral_info)}</textarea>
-   <label for="f-intro">짧은 소개</label><textarea id="f-intro">${esc(m.intro)}</textarea>
+   <label for="f-funeral">장례 일정 (빈소·발인·장지)</label><textarea id="f-funeral" style="min-height:60px">${esc(m.funeral_info)}</textarea></details>
+   <label for="f-intro">어떤 분이셨나요 (짧은 소개)</label><textarea id="f-intro">${esc(m.intro)}</textarea>
    <label for="f-vis">공개 범위</label><select id="f-vis">${Object.entries(VIS).map(([k,v])=>`<option value="${k}" ${m.visibility===k?'selected':''}>${v}</option>`).join('')}</select>
    <label for="f-portrait">영정·대표 사진</label><input id="f-portrait" type="file" accept="image/*">
    ${isNew?`<label style="display:flex;gap:8px;align-items:flex-start;color:var(--ink)"><input type="checkbox" id="f-consent" style="width:auto;margin-top:6px"> 본인 또는 가족으로서 이 기록을 남기는 데 동의하며, 녹음과 사진을 교회 디지털 추모관에 보관하는 것에 동의합니다. 언제든 내려받거나 삭제를 요청할 수 있습니다.</label>`:''}
@@ -260,8 +286,8 @@ async function editPage(id){
   if(error||!m){$('#main').innerHTML='<div class="card">기록관을 찾을 수 없거나 권한이 없습니다.</div>';return}
   $('#main').innerHTML=`<div class="row" style="justify-content:space-between"><h1 style="margin:0">${esc(m.name)} ${esc(m.title||'')}</h1><a class="btn small ghost" href="#view-${id}">추모관 보기</a></div>
    <p class="muted">${VIS[m.visibility]} · <a href="#">내 기록관 목록</a></p>
-   <div class="tabs" role="tablist">${['녹음','생애의 장','사진','기본 정보'].map((t,i)=>`<button role="tab" data-t="${i}" aria-selected="${i===0}">${t}</button>`).join('')}</div><div id="tab"></div>`;
-  const tabs=[()=>tabRec(m),()=>tabChapters(m),()=>tabPhotos(m),()=>editInfo(m)];
+   <div class="tabs" role="tablist">${['녹음','생애의 장','남기신 말씀','사진','기본 정보'].map((t,i)=>`<button role="tab" data-t="${i}" aria-selected="${i===0}">${t}</button>`).join('')}</div><div id="tab"></div>`;
+  const tabs=[()=>tabRec(m),()=>tabChapters(m),()=>tabSayings(m),()=>tabPhotos(m),()=>editInfo(m)];
   document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tabs button').forEach(x=>x.setAttribute('aria-selected',x===b));tabs[+b.dataset.t]()});
   tabRec(m);
 }
@@ -336,13 +362,34 @@ async function tabChapters(m){
     list.appendChild(d)}
 }
 
+async function tabSayings(m){
+  const {data:ss}=await sb.from('sayings').select('*').eq('memorial_id',m.id).order('sort');
+  $('#tab').innerHTML=`<div class="card"><h2>남기신 말씀</h2><p class="muted">평소 가족에게 자주 하시던 말씀, 당부, 기도를 적어 주세요. 추모관에 인용구로 모셔집니다.</p>
+    <button class="btn" id="addSay">+ 말씀 추가</button></div><div id="sayList"></div>`;
+  $('#addSay').onclick=async()=>{const {error}=await sb.from('sayings').insert({memorial_id:m.id,body:'',sort:(ss?.length||0)*10});if(error)return toast(error.message);tabSayings(m)};
+  for(const x of ss||[]){const d=document.createElement('div');d.className='card';
+    d.innerHTML=`<label>말씀</label><textarea data-f="body" placeholder="예: 밥은 먹고 다니냐. 아프지 말고.">${esc(x.body)}</textarea>
+     <label>언제, 누구에게 (선택)</label><input data-f="context" value="${esc(x.context)}" placeholder="예: 전화 끊으실 때마다, 자녀들에게">
+     <div class="row" style="margin-top:12px"><button class="btn small" data-a="save">저장</button><button class="btn small danger" data-a="del">삭제</button></div>`;
+    const sv=d.querySelector('[data-a=save]');
+    sv.onclick=async()=>{const {error}=await sb.from('sayings').update({body:d.querySelector('[data-f=body]').value,context:d.querySelector('[data-f=context]').value||null}).eq('id',x.id);toast(error?error.message:'저장했습니다.');if(!error){sv.textContent='저장됨 ✓';setTimeout(()=>sv.textContent='저장',2500)}};
+    d.querySelector('[data-a=del]').onclick=async()=>{if(!d._c){d._c=1;toast('한 번 더 누르면 삭제됩니다.');return}await sb.from('sayings').delete().eq('id',x.id);tabSayings(m)};
+    $('#sayList').appendChild(d)}
+}
+async function shrinkForUpload(f,max=2000){
+  if(!/^image\/(jpeg|png|webp|heic|heif)/.test(f.type)&&!/\.(jpe?g|png|webp)$/i.test(f.name))return {blob:f,ext:(f.name.split('.').pop()||'jpg').toLowerCase()};
+  try{const img=await createImageBitmap(f);const k=Math.min(1,max/Math.max(img.width,img.height));
+    if(k===1&&f.size<2.5e6)return {blob:f,ext:(f.name.split('.').pop()||'jpg').toLowerCase()};
+    const c=document.createElement('canvas');c.width=Math.round(img.width*k);c.height=Math.round(img.height*k);c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+    const blob=await new Promise(r=>c.toBlob(r,'image/jpeg',.86));return {blob,ext:'jpg'}}catch{return {blob:f,ext:(f.name.split('.').pop()||'jpg').toLowerCase()}}
+}
 async function tabPhotos(m){
   const {data:ps}=await sb.from('photos').select('*').eq('memorial_id',m.id).order('sort');
-  $('#tab').innerHTML=`<div class="card"><h2>사진</h2><p class="muted">여러 장을 한 번에 고를 수 있습니다. 올린 뒤 연도와 설명을 적어 주세요.</p>
+  $('#tab').innerHTML=`<div class="card"><h2>사진</h2><p class="muted">추억이 담긴 사진을 여러 장 한 번에 고를 수 있습니다(장수 제한 없음). 올린 뒤 연도와 설명을 적어 두면 추모관에 함께 보입니다.</p>
     <input type="file" id="upPh" accept="image/*" multiple></div><div class="thumbs" id="phList"></div>`;
-  $('#upPh').onchange=async e=>{const files=[...e.target.files];toast(`${files.length}장 올리는 중…`);
-    for(const [i,f] of files.entries()){const p=`${m.id}/photo-${Date.now()}-${i}.${(f.name.split('.').pop()||'jpg').toLowerCase()}`;
-      const {error}=await sb.storage.from('memorial-media').upload(p,f);if(error){toast(error.message);continue}
+  $('#upPh').onchange=async e=>{const files=[...e.target.files];
+    for(const [i,f] of files.entries()){toast(`사진 올리는 중… ${i+1} / ${files.length}`);const {blob,ext}=await shrinkForUpload(f);const p=`${m.id}/photo-${Date.now()}-${i}.${ext}`;
+      const {error}=await sb.storage.from('memorial-media').upload(p,blob,{contentType:blob.type||undefined});if(error){toast(error.message);continue}
       await sb.from('photos').insert({memorial_id:m.id,path:p,sort:(ps?.length||0)+i})}
     toast('사진을 올렸습니다.');tabPhotos(m)};
   const list=$('#phList');
@@ -355,15 +402,24 @@ async function tabPhotos(m){
     list.appendChild(f)}
 }
 
+function lightbox(items,i){
+  const o=document.createElement('div');o.className='lightbox';o.setAttribute('role','dialog');o.setAttribute('aria-modal','true');
+  const show=()=>{o.innerHTML=`<img src="${esc(items[i].url)}" alt=""><div class="cap">${esc(items[i].cap||'')}</div><button class="close" aria-label="닫기">×</button>${items.length>1?'<button class="nav prev" aria-label="이전">‹</button><button class="nav next" aria-label="다음">›</button>':''}`;
+    o.querySelector('.close').onclick=close;if(items.length>1){o.querySelector('.prev').onclick=e=>{e.stopPropagation();i=(i-1+items.length)%items.length;show()};o.querySelector('.next').onclick=e=>{e.stopPropagation();i=(i+1)%items.length;show()}}};
+  const close=()=>{o.remove();document.removeEventListener('keydown',key)};
+  const key=e=>{if(e.key==='Escape')close();if(e.key==='ArrowLeft'&&items.length>1){i=(i-1+items.length)%items.length;show()}if(e.key==='ArrowRight'&&items.length>1){i=(i+1)%items.length;show()}};
+  o.onclick=e=>{if(e.target===o)close()};document.addEventListener('keydown',key);show();document.body.appendChild(o);
+}
 async function viewPage(id){
   const {data:m}=await sb.from('memorials').select('*').eq('id',id).maybeSingle();
   if(!m){$('#main').innerHTML=`<div class="card"><h2>볼 수 없는 추모관입니다</h2><p class="muted">비공개이거나 로그인이 필요합니다.</p>${session?'':'<button class="btn kakao" id="kakao">카카오로 로그인</button>'}</div>`;
     if($('#kakao'))$('#kakao').onclick=()=>sb.auth.signInWithOAuth({provider:'kakao',options:{redirectTo:location.href}});return}
-  const [{data:chs},{data:ps},{data:recs},{data:gb}]=await Promise.all([
+  const [{data:chs},{data:ps},{data:recs},{data:gb},{data:ss}]=await Promise.all([
     sb.from('chapters').select('*').eq('memorial_id',id).eq('approved',true).order('sort'),
     sb.from('photos').select('*').eq('memorial_id',id).order('sort'),
     sb.from('recordings').select('id,question,audio_path,recorded_on').eq('memorial_id',id),
-    sb.from('guestbook').select('*').eq('memorial_id',id).order('created_at')]);
+    sb.from('guestbook').select('*').eq('memorial_id',id).order('created_at'),
+    sb.from('sayings').select('*').eq('memorial_id',id).order('sort')]);
   const recMap=Object.fromEntries((recs||[]).map(r=>[r.id,r]));
   const portrait=await signed(m.portrait_path);
   const age=m.birth_date&&m.death_date?Math.floor((new Date(m.death_date)-new Date(m.birth_date))/31557600000):null;
@@ -380,20 +436,47 @@ async function viewPage(id){
      ${(m.hymn||m.chief_mourners||m.funeral_info)?`<div class="facts">${m.hymn?`<div><b>애송 찬송</b>${esc(m.hymn)}</div>`:''}${m.chief_mourners?`<div><b>상주 · 유족</b>${esc(m.chief_mourners)}</div>`:''}${m.funeral_info?`<div><b>장례 일정</b>${esc(m.funeral_info)}</div>`:''}</div>`:''}
    </section>
    <div class="sec"><h2>생애</h2></div><div id="chs" class="timeline">${(chs||[]).length?'':'<p class="muted">아직 공개된 장이 없습니다.</p>'}</div>
-   <div class="sec"><h2>사진</h2></div><div class="thumbs" id="phs"></div>
+   ${(ss||[]).filter(x=>x.body).length?`<div class="sec"><h2>남기신 말씀</h2><p class="muted">가족에게 늘 하시던 말씀</p></div><div class="sayings">${ss.filter(x=>x.body).map(x=>`<div class="saying"><p>${esc(x.body).replace(/\n/g,'<br>')}</p>${x.context?`<div class="ctx">— ${esc(x.context)}</div>`:''}</div>`).join('')}</div>`:''}
+   ${(ps||[]).length?`<div class="sec"><h2>사진</h2><p class="muted">${ps.length}장의 추억</p></div><div class="thumbs" id="phs"></div>`:''}
    ${(recs||[]).length&&cfg.aiEnabled&&session?`<div class="sec"><h2>여쭤보기</h2></div><div class="card"><p class="muted">궁금한 것을 적으면 생전에 남기신 실제 녹음 가운데 가장 가까운 답을 찾아 들려드립니다. 새로 지어낸 말은 없습니다.</p>
      <div class="row"><input id="askq" placeholder="예: 힘드실 때 어떻게 버티셨어요?" style="flex:1"><button class="btn" id="askb">찾기</button></div><div id="aska"></div></div>`:''}
-   <div class="sec"><h2>추모의 글</h2><p class="muted">고인을 기억하는 마음을 남겨 주세요</p></div><div class="list" id="gb"></div>
-   ${session?`<div class="card" style="margin-top:12px"><label for="gbn">이름</label><input id="gbn" maxlength="20" value="${esc(session.user.user_metadata?.name||'')}"><label for="gbt">남기실 말씀</label><textarea id="gbt" maxlength="2000"></textarea><button class="btn" id="gbs" style="margin-top:14px">마음 남기기</button></div>`:'<p class="muted" style="text-align:center">로그인하면 추모의 글을 남길 수 있습니다.</p>'}${LINTEL.replace('%s','floor')}</div>`;
+   <div class="sec"><h2>함께한 추억</h2><p class="muted">고인과 함께했던 기억과 사진을 나누어 주세요</p></div><div class="memories" id="mems"></div>
+   <div class="sec"><h2>위로의 말</h2><p class="muted">유가족에게 위로의 마음을 전해 주세요</p></div><div class="list" id="gb"></div>
+   ${session?`<div class="card" style="margin-top:28px" id="gbform"><div class="seg" role="group"><button type="button" data-k="memory" aria-pressed="true">추억 나누기</button><button type="button" data-k="comfort" aria-pressed="false">위로의 말 남기기</button></div>
+     <label for="gbn">이름</label><input id="gbn" maxlength="20" value="${esc(session.user.user_metadata?.name||'')}">
+     <div id="memonly"><label for="gby">언제의 일인가요 (선택)</label><input id="gby" maxlength="30" placeholder="예: 1998년 여름, 손주 돌잔치 때"></div>
+     <label for="gbt" id="gbtl">추억</label><textarea id="gbt" maxlength="2000" placeholder="고인과 함께했던 기억을 들려주세요"></textarea>
+     <div id="memphoto"><label for="gbp">사진 (선택)</label><input id="gbp" type="file" accept="image/*"></div>
+     <button class="btn" id="gbs" style="margin-top:14px">올리기</button></div>`:`<p class="muted" style="text-align:center;margin-top:24px">로그인하면 추억과 위로의 말을 남길 수 있습니다. <button class="btn small ghost" id="kakao2">카카오로 로그인</button></p>`}${LINTEL.replace('%s','floor')}</div>`;
   const chEl=$('#chs');
   for(const c of chs||[]){const r=recMap[c.recording_id];const d=document.createElement('div');d.className='ch';
     d.innerHTML=`<div class="yr">${esc(c.period||'')}</div><h3>${esc(c.title)}</h3><p>${esc(c.body||'').replace(/\n/g,'<br>')}</p>`;
     if(r){const a=document.createElement('audio');a.controls=true;a.preload='none';a.src=await signed(r.audio_path);d.appendChild(a)}
     chEl.appendChild(d)}
-  const phEl=$('#phs');for(const p of ps||[]){const f=document.createElement('figure');f.innerHTML=`<img src="${esc(await signed(p.path))}" alt="${esc(p.caption||'')}"><figcaption class="muted">${esc([p.year,p.caption].filter(Boolean).join(' · '))}</figcaption>`;phEl.appendChild(f)}
-  const gbEl=$('#gb');(gb||[]).forEach(g=>{const d=document.createElement('div');d.className='letter';d.innerHTML=`<p>${esc(g.body).replace(/\n/g,'<br>')}</p><div class="from">${esc(g.author_name)} 드림 · ${new Date(g.created_at).toLocaleDateString('ko-KR')}</div>`;gbEl.appendChild(d)});
-  if($('#gbs'))$('#gbs').onclick=async()=>{const body=$('#gbt').value.trim();if(!body)return;
-    const {error}=await sb.from('guestbook').insert({memorial_id:id,author_id:session.user.id,author_name:$('#gbn').value.trim()||'익명',body});
+  const gallery=[];const phEl=$('#phs');
+  for(const p of ps||[]){const url=await signed(p.path);const cap=[p.year,p.caption].filter(Boolean).join(' · ');const i=gallery.push({url,cap})-1;
+    const f=document.createElement('figure');f.innerHTML=`<button aria-label="크게 보기"><img loading="lazy" src="${esc(url)}" alt="${esc(p.caption||'추억 사진')}"></button><figcaption class="muted">${esc(cap)}</figcaption>`;
+    f.querySelector('button').onclick=()=>lightbox(gallery,i);phEl.appendChild(f)}
+  const gbEl=$('#gb'),memEl=$('#mems');
+  const canDel=g=>session&&(g.author_id===session.user.id||m.owner_id===session.user.id);
+  for(const g of gb||[]){const when=new Date(g.created_at).toLocaleDateString('ko-KR');
+    if(g.kind==='memory'){const d=document.createElement('div');d.className='memory';const url=g.photo_path?await signed(g.photo_path):'';
+      d.innerHTML=`${url?`<img loading="lazy" src="${esc(url)}" alt="추억 사진">`:''}<div class="in">${g.memory_when?`<div class="yr">${esc(g.memory_when)}</div>`:''}<p>${esc(g.body).replace(/\n/g,'<br>')}</p><div class="from">${esc(g.author_name)} · ${when}${canDel(g)?' · <a href="#" data-del>삭제</a>':''}</div></div>`;
+      if(url)d.querySelector('img').onclick=()=>lightbox([{url,cap:g.memory_when||''}],0);
+      memEl.appendChild(d);var el=d}
+    else{const d=document.createElement('div');d.className='letter';d.innerHTML=`<p>${esc(g.body).replace(/\n/g,'<br>')}</p><div class="from">${esc(g.author_name)} 드림 · ${when}${canDel(g)?' · <a href="#" data-del>삭제</a>':''}</div>`;gbEl.appendChild(d);var el=d}
+    const dl=el.querySelector('[data-del]');if(dl)dl.onclick=async e=>{e.preventDefault();if(!confirm('이 글을 삭제할까요?'))return;if(g.photo_path)await sb.storage.from('memorial-media').remove([g.photo_path]);await sb.from('guestbook').delete().eq('id',g.id);viewPage(id)}}
+  if(!memEl.children.length)memEl.outerHTML='<p class="muted" style="text-align:center">아직 나눈 추억이 없습니다. 첫 추억을 남겨 주세요.</p>';
+  if(!gbEl.children.length)gbEl.outerHTML='<p class="muted" style="text-align:center">아직 남겨진 위로의 말이 없습니다.</p>';
+  if($('#kakao2'))$('#kakao2').onclick=()=>sb.auth.signInWithOAuth({provider:'kakao',options:{redirectTo:location.href}});
+  let kind='memory';
+  document.querySelectorAll('#gbform .seg button').forEach(b=>b.onclick=()=>{kind=b.dataset.k;document.querySelectorAll('#gbform .seg button').forEach(x=>x.setAttribute('aria-pressed',x===b));
+    const mem=kind==='memory';$('#memonly').hidden=!mem;$('#memphoto').hidden=!mem;$('#gbtl').textContent=mem?'추억':'위로의 말';$('#gbt').placeholder=mem?'고인과 함께했던 기억을 들려주세요':'유가족께 전하고 싶은 위로의 말씀을 적어 주세요'});
+  if($('#gbs'))$('#gbs').onclick=async()=>{const body=$('#gbt').value.trim();if(!body)return toast('내용을 적어 주세요.');const btn=$('#gbs');btn.disabled=true;
+    let photo_path=null;const f=kind==='memory'&&$('#gbp').files[0];
+    if(f){const {blob,ext}=await shrinkForUpload(f);photo_path=`${id}/guest/${session.user.id}/${Date.now()}.${ext}`;
+      const {error:e1}=await sb.storage.from('memorial-media').upload(photo_path,blob,{contentType:blob.type||undefined});if(e1){btn.disabled=false;return toast('사진을 올리지 못했습니다: '+e1.message)}}
+    const {error}=await sb.from('guestbook').insert({memorial_id:id,author_id:session.user.id,author_name:$('#gbn').value.trim()||'익명',body,kind,photo_path,memory_when:kind==='memory'?($('#gby').value.trim()||null):null});btn.disabled=false;
     if(error)toast(error.message);else viewPage(id)};
   if($('#askb'))$('#askb').onclick=async()=>{const q=$('#askq').value.trim();if(!q)return;$('#aska').innerHTML='<p class="muted">찾는 중…</p>';
     try{const j=await api('ask',{memorial_id:id,question:q});const r=recMap[j.recording_id];
