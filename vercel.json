@@ -1,0 +1,5 @@
+{
+  "rewrites": [
+    { "source": "/b/:id", "destination": "/api/obit?id=:id" }
+  ]
+}

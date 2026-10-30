@@ -179,7 +179,8 @@ async function boot(){
   if(!cfg.supabaseUrl||!cfg.supabaseAnonKey){$('#main').innerHTML='<div class="card"><h2>준비 중입니다</h2><p class="muted">서버 연결 설정(Supabase)이 아직 끝나지 않았습니다. 관리자에게 문의해 주세요.</p><p><a class="btn ghost" href="/memorial/app/?sample=1">샘플 화면 보기</a></p></div>';return}
   sb=supabase.createClient(cfg.supabaseUrl,cfg.supabaseAnonKey);
   const {data}=await sb.auth.getSession();session=data.session;
-  sb.auth.onAuthStateChange((_e,s)=>{session=s;renderAuth();route()});
+  sb.auth.onAuthStateChange((_e,s)=>{session=s;renderAuth();const ob=new URLSearchParams(location.search).get('obit');if(ob)comfortPage(ob.replace(/[^0-9a-f-]/gi,''));else route()});
+  const ob=new URLSearchParams(location.search).get('obit');if(ob){renderAuth();return comfortPage(ob.replace(/[^0-9a-f-]/gi,''))}
   window.addEventListener('hashchange',route);renderAuth();route();
 }
 function renderAuth(){
@@ -208,13 +209,14 @@ function loginPage(){
 }
 
 async function homePage(){
+  try{if(sessionStorage.getItem('memTab')==='5'&&!location.hash){location.hash='new';return}}catch{}
   const uid=session.user.id;
   const {data:own}=await sb.from('memorials').select('id,name,title,birth_date,death_date,visibility,updated_at').eq('owner_id',uid).order('updated_at',{ascending:false});
   const {data:mem}=await sb.from('memorial_members').select('memorial_id,memorials(id,name,title,birth_date,death_date,visibility)').eq('user_id',uid);
   const list=[...(own||[]),...((mem||[]).map(x=>x.memorials).filter(Boolean))];
   $('#main').innerHTML=`<div class="card hero-login" style="padding:40px 24px">${CROSS}<h1 style="margin-bottom:8px">사랑하는 분의 추모관을 만들어 드립니다</h1>
     <p class="muted" style="max-width:44ch;margin:0 auto 22px">성함과 사진만으로 시작할 수 있습니다. 부고장이 있으면 올려서 한 번에 채울 수도 있습니다.</p>
-    <a class="btn" href="#new" style="padding:15px 36px;font-size:17px">추모관 만들기</a></div>
+    <div class="row" style="justify-content:center"><a class="btn" href="#new" style="padding:15px 36px;font-size:17px">추모관 만들기</a><a class="btn ghost" href="#new" onclick="try{sessionStorage.setItem('memTab','5')}catch{}" style="padding:15px 30px;font-size:17px">모바일 부고장 바로 만들기</a></div></div>
    <h2 style="margin:28px 0 14px">내 추모관</h2>
    ${list.length?'<div class="list">'+list.map(m=>`<div class="card row" style="justify-content:space-between">
      <div><h3 style="margin:0">${esc(m.name)} ${esc(m.title||'')}</h3><div class="muted">${fmtDate(m.birth_date)}${m.death_date?' ~ '+fmtDate(m.death_date):' · 생전 기록'} · ${VIS[m.visibility]}</div></div>
@@ -296,10 +298,10 @@ async function editPage(id){
    <p class="muted">${VIS[m.visibility]} · <a href="#">내 기록관 목록</a></p>
    <div class="card row" style="gap:18px;padding:18px 20px;margin-top:14px"><div id="ptThumb" style="width:72px;aspect-ratio:3/4;border:1px solid var(--hair);background:var(--accent-soft);border-radius:36px 36px 2px 2px;overflow:hidden;display:grid;place-items:center;color:var(--gold)">✝</div>
     <div style="flex:1;min-width:180px"><b>영정 · 대표 사진</b><div class="muted">추모관 맨 위 아치 액자에 모셔지는 사진입니다.</div></div><button class="btn small" id="ptBtn">${m.portrait_path?'사진 바꾸기':'＋ 사진 올리기'}</button></div>
-   <div class="tabs" role="tablist">${['녹음','생애의 장','남기신 말씀','사진','기본 정보'].map((t,i)=>`<button role="tab" data-t="${i}" aria-selected="${i===0}">${t}</button>`).join('')}</div><div id="tab"></div>`;
+   <div class="tabs" role="tablist">${['녹음','생애의 장','남기신 말씀','사진','기본 정보','부고장'].map((t,i)=>`<button role="tab" data-t="${i}" aria-selected="${i===0}">${t}</button>`).join('')}</div><div id="tab"></div>`;
   (async()=>{const u=await signed(m.portrait_path);if(u)$('#ptThumb').innerHTML=`<img src="${esc(u)}" alt="" style="width:100%;height:100%;object-fit:cover">`})();
   $('#ptBtn').onclick=()=>portraitPicker(id,'',()=>editPage(id));
-  const tabs=[()=>tabRec(m),()=>tabChapters(m),()=>tabSayings(m),()=>tabPhotos(m),()=>editInfo(m)];
+  const tabs=[()=>tabRec(m),()=>tabChapters(m),()=>tabSayings(m),()=>tabPhotos(m),()=>editInfo(m),()=>tabObit(m)];
   document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tabs button').forEach(x=>x.setAttribute('aria-selected',x===b));tabs[+b.dataset.t]()});
   let t0=0;try{t0=+(sessionStorage.getItem('memTab')||0);sessionStorage.removeItem('memTab')}catch{}
   document.querySelector(`.tabs button[data-t="${t0}"]`).click();
@@ -375,6 +377,45 @@ async function tabChapters(m){
     list.appendChild(d)}
 }
 
+async function tabObit(m){
+  const link=`https://chunchurch.com/b/${m.id}`;const christian=(m.obit_style||'christian')!=='general';
+  $('#tab').innerHTML=`<div class="card"><h2>모바일 부고장</h2><p class="muted">카카오톡·문자로 보낼 수 있는 부고장입니다. 링크를 받은 분은 <b>로그인 없이</b> 볼 수 있고, 추모관의 사진·추억은 공개 범위대로 보호됩니다.</p>
+   ${m.obit_enabled?`<div class="notice" style="margin:12px 0"><b>부고장이 공개되어 있습니다.</b><div style="word-break:break-all;margin:6px 0">${link}</div>
+     <div class="row"><button class="btn small" id="ob-share">카카오톡·문자로 보내기</button><button class="btn small ghost" id="ob-copy">링크 복사</button><a class="btn small ghost" href="${link}" target="_blank" rel="noopener">부고장 미리보기</a></div></div>`:''}
+   <label for="ob-style">문구 형식</label><select id="ob-style"><option value="christian" ${christian?'selected':''}>기독교식 (소천)</option><option value="general" ${!christian?'selected':''}>일반 (별세)</option></select>
+   <div class="grid2"><div><label>고인 성함 · 직분</label><input value="${esc(m.name)} ${esc(m.title||'')}" disabled></div><div><label for="ob-death">소천(별세)하신 날</label><input id="ob-death" type="date" value="${esc(m.death_date)}"></div></div>
+   <label for="ob-msg">알리는 글 (비워 두면 자동으로 만들어집니다)</label><textarea id="ob-msg" placeholder="故 ${esc(m.name)}님께서 하나님의 부르심을 받아 소천하셨기에 삼가 알려 드립니다.">${esc(m.obit_message)}</textarea>
+   <label for="ob-mourn">상주 · 유족</label><textarea id="ob-mourn" style="min-height:70px" placeholder="장남 홍길동&#10;장녀 홍길순">${esc(m.chief_mourners)}</textarea>
+   <label for="ob-place">빈소 (장례식장 이름과 호실, 주소)</label><input id="ob-place" value="${esc(m.obit_place)}" placeholder="예: 춘천장례식장 특1호실">
+   <label for="ob-fun">장례 일정</label><textarea id="ob-fun" style="min-height:70px" placeholder="입관: 11월 1일 오후 2시&#10;발인(장례예배): 11월 2일 오전 7시&#10;장지: 홍천 선산">${esc(m.funeral_info)}</textarea>
+   <label for="ob-contact">연락처 (선택)</label><input id="ob-contact" value="${esc(m.obit_contact)}" placeholder="예: 상주 홍길동 010-1234-5678">
+   <label for="ob-acc">마음 전하실 곳 (선택)</label><input id="ob-acc" value="${esc(m.obit_account)}" placeholder="예: 농협 000-0000-0000 홍길동">
+   <label style="display:flex;gap:8px;align-items:center;color:var(--ink)"><input type="checkbox" id="ob-por" style="width:auto" ${m.obit_portrait||(!m.obit_enabled&&m.portrait_path)?'checked':''} ${m.portrait_path?'':'disabled'}> 영정 사진을 부고장에 표시 ${m.portrait_path?'':'<span class="muted">(먼저 맨 위에서 영정 사진을 올려 주세요)</span>'}</label>
+   <div class="row" style="margin-top:18px"><button class="btn" id="ob-save">${m.obit_enabled?'저장':'저장하고 부고장 만들기'}</button>${m.obit_enabled?'<button class="btn ghost" id="ob-off">부고장 닫기(비공개)</button>':''}</div></div>`;
+  const share=()=>{const d={title:`[부고] 故 ${m.name}님`,text:`[부고] 故 ${m.name}${m.title?' '+m.title:''}님께서 ${christian?'소천':'별세'}하셨습니다.`,url:link};if(navigator.share)navigator.share(d).catch(()=>{});else navigator.clipboard.writeText(link).then(()=>toast('링크를 복사했습니다. 카카오톡에 붙여넣어 보내 주세요.'))};
+  if($('#ob-share'))$('#ob-share').onclick=share;
+  if($('#ob-copy'))$('#ob-copy').onclick=()=>navigator.clipboard.writeText(link).then(()=>toast('링크를 복사했습니다.'),()=>prompt('복사해 주세요',link));
+  if($('#ob-off'))$('#ob-off').onclick=async()=>{if(!confirm('부고장을 닫으면 링크로 볼 수 없게 됩니다. 닫을까요?'))return;await sb.from('memorials').update({obit_enabled:false}).eq('id',m.id);const {data}=await sb.from('memorials').select('*').eq('id',m.id).single();tabObit(data)};
+  $('#ob-save').onclick=async()=>{const b=$('#ob-save');if(!$('#ob-death').value&&!confirm('소천(별세)하신 날이 비어 있습니다. 그대로 만들까요?'))return;b.disabled=true;b.textContent='저장하는 중…';
+    try{const u={obit_enabled:true,obit_style:$('#ob-style').value,obit_message:$('#ob-msg').value.trim()||null,chief_mourners:$('#ob-mourn').value.trim()||null,obit_place:$('#ob-place').value.trim()||null,
+      funeral_info:$('#ob-fun').value.trim()||null,obit_contact:$('#ob-contact').value.trim()||null,obit_account:$('#ob-acc').value.trim()||null,death_date:$('#ob-death').value||null};
+      if($('#ob-por').checked&&m.portrait_path){const r=await fetch(await signed(m.portrait_path));const blob=await r.blob();const p=`${m.id}/portrait-${Date.now()}.jpg`;
+        const {error:e1}=await sb.storage.from('obit-public').upload(p,blob,{upsert:true,contentType:blob.type||'image/jpeg'});if(e1)throw e1;u.obit_portrait=p}else u.obit_portrait=null;
+      const {error}=await sb.from('memorials').update(u).eq('id',m.id);if(error)throw error;
+      try{gtag('event','obituary_created')}catch{}
+      const {data}=await sb.from('memorials').select('*').eq('id',m.id).single();toast('부고장을 저장했습니다. 이제 링크를 보내 주세요.');tabObit(data)}
+    catch(e){b.disabled=false;b.textContent='다시 시도';alert('저장하지 못했습니다: '+e.message)}};
+}
+async function comfortPage(mid){
+  if(!session){$('#main').innerHTML=`<div class="card hero-login">${CROSS}<h1 style="font-size:24px">위로의 말 남기기</h1><p class="muted">남기신 분을 확인하기 위해 카카오 로그인이 필요합니다.</p><button class="btn kakao" id="kakao">카카오로 로그인</button><p class="muted" style="margin-top:16px"><a href="/b/${mid}">← 부고장으로 돌아가기</a></p></div>`;
+    $('#kakao').onclick=()=>sb.auth.signInWithOAuth({provider:'kakao',options:{redirectTo:location.href}});return}
+  $('#main').innerHTML=`<div class="card"><h2>위로의 말 남기기</h2><p class="muted">유가족께 전하는 마음은 부고장과 추모관에 함께 남습니다.</p>
+   <label for="cn">이름</label><input id="cn" maxlength="20" value="${esc(session.user.user_metadata?.name||'')}"><label for="cb">위로의 말</label><textarea id="cb" maxlength="1000" placeholder="삼가 고인의 명복을 빕니다. 유가족 여러분께 주님의 위로가 함께하시길 기도합니다."></textarea>
+   <div class="row" style="margin-top:14px"><button class="btn" id="cs">마음 남기기</button><a class="btn ghost" href="/b/${mid}">취소</a></div></div>`;
+  $('#cs').onclick=async()=>{const body=$('#cb').value.trim();if(!body)return alert('위로의 말을 적어 주세요.');$('#cs').disabled=true;
+    const {error}=await sb.rpc('post_comfort',{mid,aname:$('#cn').value,abody:body});if(error){$('#cs').disabled=false;return alert('남기지 못했습니다: '+error.message)}
+    location.href='/b/'+mid}
+}
 async function tabSayings(m){
   const {data:ss}=await sb.from('sayings').select('*').eq('memorial_id',m.id).order('sort');
   $('#tab').innerHTML=`<div class="card"><h2>남기신 말씀</h2><p class="muted">평소 가족에게 자주 하시던 말씀, 당부, 기도를 적어 주세요. 추모관에 인용구로 모셔집니다.</p>

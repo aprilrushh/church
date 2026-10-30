@@ -167,3 +167,30 @@ alter table public.guestbook add column if not exists photo_path text;
 alter table public.guestbook add column if not exists memory_when text;
 drop policy if exists media_guest_write on storage.objects; create policy media_guest_write on storage.objects for insert with check (bucket_id = 'memorial-media' and (storage.foldername(name))[2] = 'guest' and (storage.foldername(name))[3] = auth.uid()::text and public.can_view(((storage.foldername(name))[1])::uuid));
 drop policy if exists media_guest_delete on storage.objects; create policy media_guest_delete on storage.objects for delete using (bucket_id = 'memorial-media' and (storage.foldername(name))[2] = 'guest' and (storage.foldername(name))[3] = auth.uid()::text);
+
+-- 무료 모바일 부고장
+alter table public.memorials add column if not exists obit_enabled boolean not null default false;
+alter table public.memorials add column if not exists obit_style text not null default 'christian';
+alter table public.memorials add column if not exists obit_message text;
+alter table public.memorials add column if not exists obit_place text;
+alter table public.memorials add column if not exists obit_contact text;
+alter table public.memorials add column if not exists obit_account text;
+alter table public.memorials add column if not exists obit_portrait text;
+insert into storage.buckets (id, name, public) values ('obit-public','obit-public', true) on conflict (id) do nothing;
+drop policy if exists obit_pub_write on storage.objects; create policy obit_pub_write on storage.objects for insert with check (bucket_id = 'obit-public' and public.can_edit(((storage.foldername(name))[1])::uuid));
+drop policy if exists obit_pub_update on storage.objects; create policy obit_pub_update on storage.objects for update using (bucket_id = 'obit-public' and public.can_edit(((storage.foldername(name))[1])::uuid));
+drop policy if exists obit_pub_delete on storage.objects; create policy obit_pub_delete on storage.objects for delete using (bucket_id = 'obit-public' and public.can_edit(((storage.foldername(name))[1])::uuid));
+create or replace function public.get_obituary(mid uuid) returns json language sql stable security definer set search_path = public as $$
+  select json_build_object('id',m.id,'name',m.name,'title',m.title,'birth_date',m.birth_date,'death_date',m.death_date,'chief_mourners',m.chief_mourners,'funeral_info',m.funeral_info,'verse',m.verse,'verse_ref',m.verse_ref,'style',m.obit_style,'message',m.obit_message,'place',m.obit_place,'contact',m.obit_contact,'account',m.obit_account,'portrait',m.obit_portrait,'visibility',m.visibility,
+    'comforts',coalesce((select json_agg(json_build_object('name',g.author_name,'body',g.body,'at',g.created_at) order by g.created_at desc) from (select * from guestbook where memorial_id=m.id and kind='comfort' order by created_at desc limit 100) g),'[]'::json))
+  from memorials m where m.id = mid and m.obit_enabled;
+$$;
+grant execute on function public.get_obituary(uuid) to anon, authenticated;
+create or replace function public.post_comfort(mid uuid, aname text, abody text) returns void language plpgsql security definer set search_path = public as $$
+begin
+  if auth.uid() is null then raise exception '로그인이 필요합니다'; end if;
+  if not exists(select 1 from memorials where id=mid and obit_enabled) then raise exception '부고장을 찾을 수 없습니다'; end if;
+  if char_length(coalesce(abody,'')) < 1 or char_length(abody) > 1000 then raise exception '내용을 1000자 이내로 적어 주세요'; end if;
+  insert into guestbook(memorial_id,author_id,author_name,body,kind) values (mid,auth.uid(),left(coalesce(nullif(trim(aname),''),'익명'),20),abody,'comfort');
+end $$;
+grant execute on function public.post_comfort(uuid,text,text) to authenticated;
