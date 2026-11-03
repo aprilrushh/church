@@ -74,7 +74,7 @@ ${tel ? `<a class="btn" href="tel:${tel[0].replace(/[^0-9]/g, '')}">상주께 �
 <button class="btn" onclick="share()">부고 전달하기</button>
 </div>
 ${comforts.length ? `<div class="sec">위로의 말</div>${comforts.map(c => `<div class="c"><p>${nl(c.body)}</p><small>${esc(c.name)} · ${new Date(c.at).toLocaleDateString('ko-KR')}</small></div>`).join('')}` : ''}
-<div class="foot">${o.visibility !== 'private' ? `<a href="/memorial/app/#view-${o.id}">추모관에서 사진과 생애 보기 →</a><br>` : ''}이 부고장은 <a href="/memorial/obituary/">무료 모바일 부고장</a>으로 만들었습니다.<br>광고 없는 비영리 서비스 · 여의도순복음춘천교회</div>
+<div class="foot">${o.visibility !== 'private' ? `<a href="/memorial/app/#view-${o.id}">추모관에서 사진과 생애 보기 →</a>` : ''}</div>
 </main><script>
 function toast(m){const t=document.createElement('div');t.className='toast';t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),2500)}
 function cp(t){navigator.clipboard.writeText(t).then(()=>toast('복사했습니다.'),()=>prompt('복사해 주세요',t))}
