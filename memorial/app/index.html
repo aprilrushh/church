@@ -193,8 +193,9 @@ function renderAuth(){
 function route(){
   const h=location.hash.slice(1);const [view,id]=h.split('-').length>5?[h.slice(0,h.indexOf('-')),h.slice(h.indexOf('-')+1)]:h.split(/-(.+)/);
   if(view==='view'&&id)return viewPage(id);
-  if(!session)return loginPage();
+  if(session&&!DRAFT_DONE&&getDraft())return finishDraft();
   if(view==='new')return editInfo(null);
+  if(!session){try{if(sessionStorage.getItem('memTab')==='5'){location.hash='new';return}}catch{}return loginPage()}
   if(view==='edit'&&id)return editPage(id);
   return homePage();
 }
@@ -203,8 +204,11 @@ function loginPage(){
   $('#main').innerHTML=`<div class="card hero-login">${CROSS}
     <h1>사랑하는 분의 삶을<br>정성껏 남겨 드립니다</h1>
     <p class="muted" style="max-width:46ch;margin:0 auto 24px">목소리와 사진, 걸어오신 믿음의 길을 가족과 함께 기록하세요. 기록은 기본적으로 가족만 볼 수 있으며, 이용료는 없습니다.</p>
-    <button class="btn kakao" id="kakao">카카오로 추모관 만들기</button>
-    <p class="muted" style="margin-top:20px"><a href="/memorial/app/?sample=1">샘플 화면 먼저 보기</a></p></div>`;
+    <a class="btn" href="#new" style="padding:15px 36px;font-size:17px">추모관 만들기 시작</a>
+    <a class="btn ghost" href="#new" onclick="try{sessionStorage.setItem('memTab','5')}catch{}" style="padding:15px 30px;font-size:17px;margin-left:6px">모바일 부고장 만들기</a>
+    <p class="muted" style="margin-top:12px;font-size:14px">로그인 없이 바로 작성하고, 저장할 때 카카오로 한 번만 확인합니다.</p>
+    <p class="muted" style="margin-top:22px">이미 만드셨나요? <button class="btn small kakao" id="kakao" style="padding:6px 16px;font-size:14px">카카오로 로그인</button></p>
+    <p class="muted" style="margin-top:10px"><a href="/memorial/app/?sample=1">샘플 화면 먼저 보기</a></p></div>`;
   $('#kakao').onclick=()=>sb.auth.signInWithOAuth({provider:'kakao',options:{redirectTo:location.origin+'/memorial/app/'}});
 }
 
@@ -244,9 +248,11 @@ async function readObit(f){
 }
 async function editInfo(m){
   m=m||{visibility:'private'};
-  const isNew=!m.id;
-  const html=`<div class="card"><h2>${isNew?'추모관 만들기':'기본 정보'}</h2>
-   ${cfg.aiEnabled?`<details class="opt"${isNew?'':''}><summary>부고장이 있으신가요? 올리면 아래 칸을 자동으로 채워 드립니다 (선택)</summary>
+  const isNew=!m.id;const guest=!session;
+  let obitMode=false;try{obitMode=sessionStorage.getItem('memTab')==='5'}catch{}
+  const html=`<div class="card"><h2>${isNew?(obitMode?'모바일 부고장 만들기':'추모관 만들기'):'기본 정보'}</h2>
+   ${guest?`<div class="notice" style="margin-bottom:14px">로그인 없이 먼저 작성하세요. 맨 아래 <b>${obitMode?'부고장 만들기':'만들기'}</b>를 누를 때 카카오로 한 번만 확인하면, 쓰신 내용이 그대로 저장됩니다.</div>`:''}
+   ${cfg.aiEnabled&&!guest?`<details class="opt"${isNew?'':''}><summary>부고장이 있으신가요? 올리면 아래 칸을 자동으로 채워 드립니다 (선택)</summary>
     <p class="muted" style="margin:6px 0 10px">부고장 사진이나 PDF를 올리면 성함·직분·날짜·상주·장례 일정을 아래 칸에 채워 드립니다. 저장 전에 꼭 확인해 주세요. 부고장 파일은 보관하지 않습니다.</p>
     <div class="row" style="margin-top:4px"><input id="f-obit" type="file" accept="image/*,application/pdf" style="flex:1;min-width:220px"><button type="button" class="btn" id="obit-apply" disabled>적용하기</button></div><div id="obit-msg" class="muted" style="margin-top:8px"></div></details>`:''}
    <div class="grid2">
@@ -259,14 +265,14 @@ async function editInfo(m){
    </div>
    <label for="f-verse">좋아하시는 말씀</label><textarea id="f-verse" style="min-height:60px">${esc(m.verse)}</textarea>
    <label for="f-vref">말씀 출처</label><input id="f-vref" value="${esc(m.verse_ref)}" placeholder="예: 디모데후서 4:7">
-   <details class="opt"${(m.chief_mourners||m.funeral_info)?' open':''}><summary>장례 정보 (선택)</summary>
+   <details class="opt"${(m.chief_mourners||m.funeral_info||(isNew&&obitMode))?' open':''}><summary>장례 정보${isNew&&obitMode?' (부고장에 표시됩니다)':' (선택)'}</summary>
    <label for="f-mourn">상주·유족</label><textarea id="f-mourn" style="min-height:60px" placeholder="예: 장남 홍길동&#10;장녀 홍길순">${esc(m.chief_mourners)}</textarea>
    <label for="f-funeral">장례 일정 (빈소·발인·장지)</label><textarea id="f-funeral" style="min-height:60px">${esc(m.funeral_info)}</textarea></details>
    <label for="f-intro">어떤 분이셨나요 (짧은 소개)</label><textarea id="f-intro">${esc(m.intro)}</textarea>
    <label for="f-vis">공개 범위</label><select id="f-vis">${Object.entries(VIS).map(([k,v])=>`<option value="${k}" ${m.visibility===k?'selected':''}>${v}</option>`).join('')}</select>
    <label for="f-portrait">영정·대표 사진</label><input id="f-portrait" type="file" accept="image/*">
    ${isNew?`<label style="display:flex;gap:8px;align-items:flex-start;color:var(--ink)"><input type="checkbox" id="f-consent" style="width:auto;margin-top:6px"> 본인 또는 가족으로서 이 기록을 남기는 데 동의하며, 녹음과 사진을 교회 디지털 추모관에 보관하는 것에 동의합니다. 언제든 내려받거나 삭제를 요청할 수 있습니다.</label>`:''}
-   <div class="row" style="margin-top:16px"><button class="btn" id="save">${isNew?'만들기':'저장'}</button>${isNew?'<a class="btn ghost" href="#">취소</a>':''}</div></div>`;
+   <div class="row" style="margin-top:16px"><button class="btn" id="save">${isNew?(guest?(obitMode?'카카오로 확인하고 부고장 만들기':'카카오로 확인하고 만들기'):(obitMode?'부고장 만들기':'만들기')):'저장'}</button>${isNew?'<a class="btn ghost" href="#">취소</a>':''}</div></div>`;
   if(isNew)$('#main').innerHTML=html;else $('#tab').innerHTML=html;
   const ob=$('#f-obit'),oa=$('#obit-apply');if(ob){ob.onchange=()=>{oa.disabled=!ob.files[0];$('#obit-msg').textContent=ob.files[0]?'파일을 골랐습니다. 적용하기를 눌러 주세요.':''};oa.onclick=async()=>{oa.disabled=true;oa.textContent='읽는 중…';await readObit(ob.files[0]);oa.textContent='적용하기';oa.disabled=false}}
   $('#save').onclick=async()=>{
@@ -275,6 +281,13 @@ async function editInfo(m){
     const row={name,title:$('#f-title').value.trim()||null,birth_date:$('#f-birth').value||null,death_date:$('#f-death').value||null,
       hometown:$('#f-home').value.trim()||null,hymn:$('#f-hymn').value.trim()||null,verse:$('#f-verse').value.trim()||null,
       verse_ref:$('#f-vref').value.trim()||null,intro:$('#f-intro').value.trim()||null,chief_mourners:$('#f-mourn').value.trim()||null,funeral_info:$('#f-funeral').value.trim()||null,visibility:$('#f-vis').value,updated_at:new Date().toISOString()};
+    if(guest){
+      const f=$('#f-portrait').files[0];let portrait=null;
+      if(f){try{const {blob}=await shrinkForUpload(f,1200);portrait=await new Promise(ok=>{const r=new FileReader();r.onload=()=>ok(r.result);r.readAsDataURL(blob)})}catch{}}
+      try{localStorage.setItem('memDraft',JSON.stringify({row,portrait,obit:obitMode,t:Date.now()}))}catch(e){try{localStorage.setItem('memDraft',JSON.stringify({row,obit:obitMode,t:Date.now()}))}catch{}}
+      try{gtag('event','memorial_draft')}catch{}
+      return sb.auth.signInWithOAuth({provider:'kakao',options:{redirectTo:location.origin+'/memorial/app/'}});
+    }
     $('#save').disabled=true;
     try{
       let id=m.id;
@@ -290,6 +303,23 @@ async function editInfo(m){
   };
 }
 
+let DRAFT_DONE=false;
+function getDraft(){try{const d=JSON.parse(localStorage.getItem('memDraft')||'null');if(d&&Date.now()-d.t<864e5)return d;localStorage.removeItem('memDraft')}catch{}return null}
+async function finishDraft(){
+  DRAFT_DONE=true;const d=getDraft();try{localStorage.removeItem('memDraft')}catch{}
+  if(!d)return route();
+  $('#main').innerHTML='<div class="card" style="text-align:center"><h2>저장하는 중입니다…</h2><p class="muted">작성하신 내용을 그대로 옮기고 있습니다.</p></div>';
+  try{
+    const row={...d.row,owner_id:session.user.id,consent_at:new Date().toISOString(),updated_at:new Date().toISOString()};
+    const {data,error}=await sb.from('memorials').insert(row).select('id').single();if(error)throw error;const id=data.id;
+    try{gtag('event','memorial_created');if(window.MEM_CONV)gtag('event','conversion',{send_to:window.MEM_CONV})}catch(e){}
+    if(d.portrait){try{const blob=await (await fetch(d.portrait)).blob();const p=`${id}/portrait-${Date.now()}.jpg`;
+      const {error:e1}=await sb.storage.from('memorial-media').upload(p,blob,{upsert:true,contentType:blob.type||'image/jpeg'});if(!e1)await sb.from('memorials').update({portrait_path:p}).eq('id',id)}catch{}}
+    try{sessionStorage.setItem('memTab',d.obit?'5':'0')}catch{}
+    toast(d.obit?'저장했습니다. 이제 부고장을 켜고 보내실 수 있습니다.':'저장했습니다.');
+    if(location.hash==='#edit-'+id)editPage(id);else location.hash='edit-'+id;
+  }catch(e){try{localStorage.setItem('memDraft',JSON.stringify(d))}catch{}DRAFT_DONE=false;alert('저장하지 못했습니다.\n'+e.message);location.hash='new'}
+}
 async function editPage(id){
   const {data:m,error}=await sb.from('memorials').select('*').eq('id',id).single();
   if(error||!m){$('#main').innerHTML='<div class="card">기록관을 찾을 수 없거나 권한이 없습니다.</div>';return}
