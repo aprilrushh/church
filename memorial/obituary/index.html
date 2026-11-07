@@ -12,7 +12,9 @@
 <link rel="icon" href="/images/logo.png">
 <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18531482947"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','AW-18219820392');gtag('config','AW-18531482947');
-window.MEM_CONV='AW-18531482947/R1DiCJrQ064dEMP6v4RF';function memStart(){try{gtag('event','memorial_start');}catch(e){}}</script>
+window.MEM_CONV='AW-18531482947/R1DiCJrQ064dEMP6v4RF';function memStart(){try{gtag('event','memorial_start');}catch(e){}trk('cta_click')}
+function trk(s){try{let id=localStorage.getItem('fsid');if(!id){id=Math.random().toString(36).slice(2,12);localStorage.setItem('fsid',id)}const q=new URLSearchParams(location.search);let src=sessionStorage.getItem('fsrc');if(!src){src=(q.get('gclid')||q.get('gbraid')||q.get('wbraid')?'ads':(document.referrer&&!document.referrer.includes(location.host)?'ref':'direct'))+':'+location.pathname.slice(0,40);sessionStorage.setItem('fsrc',src)}navigator.sendBeacon('/api/track',new Blob([JSON.stringify({step:s,sid:id,src,path:location.pathname+location.hash.split('-')[0]})],{type:'application/json'}))}catch(e){}}
+trk('land_obituary');</script>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700&family=Noto+Sans+KR:wght@400;500;700&display=swap">
 <style>
 :root{--bg:#f6f3ee;--paper:#fdfbf8;--ink:#2a2724;--muted:#6f6860;--line:#e3ddd3;--hair:#d9cfbf;--accent:#3b4a47;--gold:#a88a55;--gold-soft:#efe6d6;

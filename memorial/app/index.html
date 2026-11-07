@@ -7,7 +7,8 @@
 <title>디지털 추모관 · 기록하기</title>
 <link rel="icon" href="/images/logo.png">
 <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18531482947"></script>
-<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','AW-18531482947');window.MEM_CONV='AW-18531482947/R1DiCJrQ064dEMP6v4RF';</script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','AW-18531482947');window.MEM_CONV='AW-18531482947/R1DiCJrQ064dEMP6v4RF';
+function trk(s){try{let id=localStorage.getItem('fsid');if(!id){id=Math.random().toString(36).slice(2,12);localStorage.setItem('fsid',id)}const q=new URLSearchParams(location.search);let src=sessionStorage.getItem('fsrc');if(!src){src=(q.get('gclid')||q.get('gbraid')||q.get('wbraid')?'ads':(document.referrer&&!document.referrer.includes(location.host)?'ref':'direct'))+':'+location.pathname.slice(0,40);sessionStorage.setItem('fsrc',src)}navigator.sendBeacon('/api/track',new Blob([JSON.stringify({step:s,sid:id,src,path:location.pathname+location.hash.split('-')[0]})],{type:'application/json'}))}catch(e){}}</script>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Nanum+Myeongjo:wght@400;700&family=Noto+Sans+KR:wght@400;500;700&display=swap">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <style>
@@ -181,7 +182,7 @@ async function boot(){
   const {data}=await sb.auth.getSession();session=data.session;
   sb.auth.onAuthStateChange((_e,s)=>{session=s;renderAuth();const ob=new URLSearchParams(location.search).get('obit');if(ob)comfortPage(ob.replace(/[^0-9a-f-]/gi,''));else route()});
   const ob=new URLSearchParams(location.search).get('obit');if(ob){renderAuth();return comfortPage(ob.replace(/[^0-9a-f-]/gi,''))}
-  window.addEventListener('hashchange',route);renderAuth();route();
+  trk(session?'app_open_member':'app_open');window.addEventListener('hashchange',route);renderAuth();route();
 }
 function renderAuth(){
   const b=$('#authbox');
@@ -209,7 +210,7 @@ function loginPage(){
     <p class="muted" style="margin-top:12px;font-size:14px">로그인 없이 바로 작성하고, 저장할 때 카카오로 한 번만 확인합니다.</p>
     <p class="muted" style="margin-top:22px">이미 만드셨나요? <button class="btn small kakao" id="kakao" style="padding:6px 16px;font-size:14px">카카오로 로그인</button></p>
     <p class="muted" style="margin-top:10px"><a href="/memorial/app/?sample=1">샘플 화면 먼저 보기</a></p></div>`;
-  $('#kakao').onclick=()=>sb.auth.signInWithOAuth({provider:'kakao',options:{redirectTo:location.origin+'/memorial/app/'}});
+  $('#kakao').onclick=()=>{trk('login_click');sb.auth.signInWithOAuth({provider:'kakao',options:{redirectTo:location.origin+'/memorial/app/'}})};
 }
 
 async function homePage(){
@@ -258,26 +259,31 @@ async function editInfo(m){
    <div class="grid2">
     <div><label for="f-name">성함 *</label><input id="f-name" value="${esc(m.name)}" maxlength="40"></div>
     <div><label for="f-title">직분·호칭</label><input id="f-title" value="${esc(m.title)}" placeholder="예: 권사, 장로, 성도"></div>
+    <div><label for="f-death">${obitMode?'별세(소천)하신 날':'소천하신 날 (모르시면 비워 두셔도 됩니다)'}</label><input id="f-death" type="date" value="${esc(m.death_date)}"></div>
     <div><label for="f-birth">태어나신 날</label><input id="f-birth" type="date" value="${esc(m.birth_date)}"></div>
-    <div><label for="f-death">소천하신 날 (모르시면 비워 두셔도 됩니다)</label><input id="f-death" type="date" value="${esc(m.death_date)}"></div>
+   </div>
+   ${obitMode&&isNew?`<label for="f-mourn">상주·유족</label><textarea id="f-mourn" style="min-height:60px" placeholder="예: 장남 홍길동&#10;장녀 홍길순">${esc(m.chief_mourners)}</textarea>
+   <label for="f-funeral">빈소·발인·장지</label><textarea id="f-funeral" style="min-height:70px" placeholder="예: 춘천○○장례식장 3호실&#10;발인 11월 4일 오전 8시 / 장지 ○○추모공원">${esc(m.funeral_info)}</textarea>`:''}
+   <details class="opt"${(!isNew&&(m.hometown||m.hymn||m.verse||m.intro))?' open':''}><summary>${obitMode&&isNew?'추모관에 더 남기기 (선택 · 나중에 써도 됩니다)':'고향·찬송·말씀·소개 (선택)'}</summary>
+   <div class="grid2">
     <div><label for="f-home">고향</label><input id="f-home" value="${esc(m.hometown)}"></div>
     <div><label for="f-hymn">애송 찬송</label><input id="f-hymn" value="${esc(m.hymn)}"></div>
    </div>
    <label for="f-verse">좋아하시는 말씀</label><textarea id="f-verse" style="min-height:60px">${esc(m.verse)}</textarea>
    <label for="f-vref">말씀 출처</label><input id="f-vref" value="${esc(m.verse_ref)}" placeholder="예: 디모데후서 4:7">
-   <details class="opt"${(m.chief_mourners||m.funeral_info||(isNew&&obitMode))?' open':''}><summary>장례 정보${isNew&&obitMode?' (부고장에 표시됩니다)':' (선택)'}</summary>
+   <label for="f-intro">어떤 분이셨나요 (짧은 소개)</label><textarea id="f-intro">${esc(m.intro)}</textarea></details>
+   ${obitMode&&isNew?'':`<details class="opt"${(m.chief_mourners||m.funeral_info)?' open':''}><summary>장례 정보 (선택)</summary>
    <label for="f-mourn">상주·유족</label><textarea id="f-mourn" style="min-height:60px" placeholder="예: 장남 홍길동&#10;장녀 홍길순">${esc(m.chief_mourners)}</textarea>
-   <label for="f-funeral">장례 일정 (빈소·발인·장지)</label><textarea id="f-funeral" style="min-height:60px">${esc(m.funeral_info)}</textarea></details>
-   <label for="f-intro">어떤 분이셨나요 (짧은 소개)</label><textarea id="f-intro">${esc(m.intro)}</textarea>
+   <label for="f-funeral">장례 일정 (빈소·발인·장지)</label><textarea id="f-funeral" style="min-height:60px">${esc(m.funeral_info)}</textarea></details>`}
    <label for="f-vis">공개 범위</label><select id="f-vis">${Object.entries(VIS).map(([k,v])=>`<option value="${k}" ${m.visibility===k?'selected':''}>${v}</option>`).join('')}</select>
    <label for="f-portrait">영정·대표 사진</label><input id="f-portrait" type="file" accept="image/*">
-   ${isNew?`<label style="display:flex;gap:8px;align-items:flex-start;color:var(--ink)"><input type="checkbox" id="f-consent" style="width:auto;margin-top:6px"> 본인 또는 가족으로서 이 기록을 남기는 데 동의하며, 녹음과 사진을 교회 디지털 추모관에 보관하는 것에 동의합니다. 언제든 내려받거나 삭제를 요청할 수 있습니다.</label>`:''}
+   ${isNew?`<p class="muted" style="font-size:13px;margin-top:14px">아래 버튼을 누르면, 가족으로서 이 기록을 남기고 교회 디지털 추모관에 보관하는 데 동의하시는 것입니다. 언제든 내려받거나 삭제를 요청하실 수 있습니다.</p>`:''}
    <div class="row" style="margin-top:16px"><button class="btn" id="save">${isNew?(guest?(obitMode?'카카오로 확인하고 부고장 만들기':'카카오로 확인하고 만들기'):(obitMode?'부고장 만들기':'만들기')):'저장'}</button>${isNew?'<a class="btn ghost" href="#">취소</a>':''}</div></div>`;
-  if(isNew)$('#main').innerHTML=html;else $('#tab').innerHTML=html;
+  if(isNew){$('#main').innerHTML=html;trk(obitMode?'form_open_obit':'form_open')}else $('#tab').innerHTML=html;
   const ob=$('#f-obit'),oa=$('#obit-apply');if(ob){ob.onchange=()=>{oa.disabled=!ob.files[0];$('#obit-msg').textContent=ob.files[0]?'파일을 골랐습니다. 적용하기를 눌러 주세요.':''};oa.onclick=async()=>{oa.disabled=true;oa.textContent='읽는 중…';await readObit(ob.files[0]);oa.textContent='적용하기';oa.disabled=false}}
   $('#save').onclick=async()=>{
-    const name=$('#f-name').value.trim();if(!name)return toast('성함을 입력해 주세요.');
-    if(isNew&&!$('#f-consent').checked)return toast('동의에 체크해 주세요.');
+    const name=$('#f-name').value.trim();if(!name){trk('save_noname');$('#f-name').focus();$('#f-name').scrollIntoView({block:'center'});return toast('성함을 입력해 주세요.')}
+    if(isNew)trk(guest?'save_click_guest':'save_click');
     const row={name,title:$('#f-title').value.trim()||null,birth_date:$('#f-birth').value||null,death_date:$('#f-death').value||null,
       hometown:$('#f-home').value.trim()||null,hymn:$('#f-hymn').value.trim()||null,verse:$('#f-verse').value.trim()||null,
       verse_ref:$('#f-vref').value.trim()||null,intro:$('#f-intro').value.trim()||null,chief_mourners:$('#f-mourn').value.trim()||null,funeral_info:$('#f-funeral').value.trim()||null,visibility:$('#f-vis').value,updated_at:new Date().toISOString()};
@@ -292,7 +298,7 @@ async function editInfo(m){
     try{
       let id=m.id;
       if(isNew){row.owner_id=session.user.id;row.consent_at=new Date().toISOString();
-        const {data,error}=await sb.from('memorials').insert(row).select('id').single();if(error)throw error;id=data.id;try{gtag('event','memorial_created');if(window.MEM_CONV)gtag('event','conversion',{send_to:window.MEM_CONV})}catch(e){}}
+        const {data,error}=await sb.from('memorials').insert(row).select('id').single();if(error)throw error;id=data.id;trk('created');try{gtag('event','memorial_created');if(window.MEM_CONV)gtag('event','conversion',{send_to:window.MEM_CONV})}catch(e){}}
       else{const {error}=await sb.from('memorials').update(row).eq('id',id);if(error)throw error}
       const file=$('#f-portrait').files[0];
       if(file){const p=`${id}/portrait-${Date.now()}.${(file.name.split('.').pop()||'jpg').toLowerCase()}`;
@@ -306,19 +312,19 @@ async function editInfo(m){
 let DRAFT_DONE=false;
 function getDraft(){try{const d=JSON.parse(localStorage.getItem('memDraft')||'null');if(d&&Date.now()-d.t<864e5)return d;localStorage.removeItem('memDraft')}catch{}return null}
 async function finishDraft(){
-  DRAFT_DONE=true;const d=getDraft();try{localStorage.removeItem('memDraft')}catch{}
+  DRAFT_DONE=true;const d=getDraft();trk('login_return_draft');try{localStorage.removeItem('memDraft')}catch{}
   if(!d)return route();
   $('#main').innerHTML='<div class="card" style="text-align:center"><h2>저장하는 중입니다…</h2><p class="muted">작성하신 내용을 그대로 옮기고 있습니다.</p></div>';
   try{
     const row={...d.row,owner_id:session.user.id,consent_at:new Date().toISOString(),updated_at:new Date().toISOString()};
     const {data,error}=await sb.from('memorials').insert(row).select('id').single();if(error)throw error;const id=data.id;
-    try{gtag('event','memorial_created');if(window.MEM_CONV)gtag('event','conversion',{send_to:window.MEM_CONV})}catch(e){}
+    try{gtag('event','memorial_created');if(window.MEM_CONV)gtag('event','conversion',{send_to:window.MEM_CONV})}catch(e){}trk('created_from_draft');
     if(d.portrait){try{const blob=await (await fetch(d.portrait)).blob();const p=`${id}/portrait-${Date.now()}.jpg`;
       const {error:e1}=await sb.storage.from('memorial-media').upload(p,blob,{upsert:true,contentType:blob.type||'image/jpeg'});if(!e1)await sb.from('memorials').update({portrait_path:p}).eq('id',id)}catch{}}
     try{sessionStorage.setItem('memTab',d.obit?'5':'0')}catch{}
     toast(d.obit?'저장했습니다. 이제 부고장을 켜고 보내실 수 있습니다.':'저장했습니다.');
     if(location.hash==='#edit-'+id)editPage(id);else location.hash='edit-'+id;
-  }catch(e){try{localStorage.setItem('memDraft',JSON.stringify(d))}catch{}DRAFT_DONE=false;alert('저장하지 못했습니다.\n'+e.message);location.hash='new'}
+  }catch(e){trk('draft_error');try{localStorage.setItem('memDraft',JSON.stringify(d))}catch{}DRAFT_DONE=false;alert('저장하지 못했습니다.\n'+e.message);location.hash='new'}
 }
 async function editPage(id){
   const {data:m,error}=await sb.from('memorials').select('*').eq('id',id).single();
