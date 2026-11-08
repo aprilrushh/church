@@ -144,7 +144,7 @@ details.opt summary{cursor:pointer;font-weight:500}
 <body>
 <div class="wrap">
   <header>
-    <a class="brand" href="#"><svg class="mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M12 2.5v19M6 8.5h12"/></svg><span><b>디지털 추모관</b><small>여의도순복음춘천교회 · 가칭 · 시범 운영</small></span></a>
+    <a class="brand" href="#"><svg class="mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M12 3.2c1.6 1.9 1.6 3.6 0 5.1c-1.6-1.5-1.6-3.2 0-5.1Z"/><path d="M9.5 10.5h5V21h-5z"/><path d="M7 21h10"/></svg><span><b>디지털 추모관</b><small>무료 · 광고 없는 온라인 추모관</small></span></a>
     <div class="row" id="authbox"></div>
   </header>
   <main id="main"><p class="muted">불러오는 중…</p></main>
@@ -155,13 +155,15 @@ details.opt summary{cursor:pointer;font-weight:500}
 const QUESTIONS=[
  '고향은 어디셨고, 어린 시절은 어떠셨어요?','부모님은 어떤 분이셨어요?','학교 다니던 시절 기억나는 일이 있으세요?',
  '배우자를 처음 만난 이야기를 들려주세요.','결혼하고 처음 살림은 어떠셨어요?','자녀가 태어났을 때 어떠셨어요?',
- '가장 힘들었던 때는 언제였고, 어떻게 이겨내셨어요?','처음 교회에 나가신 계기는 무엇이었어요?',
- '가장 좋아하시는 성경 말씀과 그 이유는요?','가장 좋아하시는 찬송은요?','살면서 가장 감사했던 일은 무엇이에요?',
+ '가장 힘들었던 때는 언제였고, 어떻게 이겨내셨어요?','살면서 가장 감사했던 일은 무엇이에요?','가장 좋아하시던 노래나 글귀는요?',
  '자녀들에게 꼭 남기고 싶은 말씀은요?','손주들에게 하고 싶은 말씀은요?','어떤 사람으로 기억되고 싶으세요?'];
+const Q_CHR=['처음 교회에 나가신 계기는 무엇이었어요?','가장 좋아하시는 성경 말씀과 그 이유는요?','가장 좋아하시는 찬송은요?'];
+const isChr=m=>m&&m.faith==='christian';const qsFor=m=>isChr(m)?[...QUESTIONS,...Q_CHR]:QUESTIONS;
+const MARK='<svg class="cross" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M12 3.2c1.6 1.9 1.6 3.6 0 5.1c-1.6-1.5-1.6-3.2 0-5.1Z"/><path d="M9.5 10.5h5V21h-5z"/><path d="M7 21h10"/></svg>';
 const CROSS='<svg class="cross" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M12 2.5v19M6 8.5h12"/></svg>';
 const CORNER='<svg class="corner %s" viewBox="0 0 46 46" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true"><path d="M1 45V9a8 8 0 0 1 8-8h36"/><path d="M6 45V14a8 8 0 0 1 8-8h31"/><path d="M14 14c4 0 6 2 6 6M14 14c0 4 2 6 6 6"/><circle cx="14" cy="14" r="1.6" fill="currentColor"/></svg>';
 const LINTEL='<svg class="%s" viewBox="0 0 360 18" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true"><path d="M0 9h150M210 9h150"/><path d="M160 9c6-8 14-8 20 0c6 8 14 8 20 0c-6-8-14-8-20 0c-6 8-14 8-20 0z"/><circle cx="150" cy="9" r="1.5" fill="currentColor"/><circle cx="210" cy="9" r="1.5" fill="currentColor"/></svg>';
-const VIS={private:'가족만 보기',church:'로그인한 교회 이용자',public:'전체 공개'};
+const VIS={private:'가족만 보기',church:'로그인한 이용자만',public:'전체 공개'};
 let sb=null, cfg=null, session=null;
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -202,9 +204,9 @@ function route(){
 }
 
 function loginPage(){
-  $('#main').innerHTML=`<div class="card hero-login">${CROSS}
+  $('#main').innerHTML=`<div class="card hero-login">${MARK}
     <h1>사랑하는 분의 삶을<br>정성껏 남겨 드립니다</h1>
-    <p class="muted" style="max-width:46ch;margin:0 auto 24px">목소리와 사진, 걸어오신 믿음의 길을 가족과 함께 기록하세요. 기록은 기본적으로 가족만 볼 수 있으며, 이용료는 없습니다.</p>
+    <p class="muted" style="max-width:46ch;margin:0 auto 24px">목소리와 사진, 걸어오신 삶의 이야기를 가족과 함께 기록하세요. 기록은 기본적으로 가족만 볼 수 있으며, 이용료는 없습니다.</p>
     <a class="btn" href="#new" style="padding:15px 36px;font-size:17px">추모관 만들기 시작</a>
     <a class="btn ghost" href="#new" onclick="try{sessionStorage.setItem('memTab','5')}catch{}" style="padding:15px 30px;font-size:17px;margin-left:6px">모바일 부고장 만들기</a>
     <p class="muted" style="margin-top:12px;font-size:14px">로그인 없이 바로 작성하고, 저장할 때 카카오로 한 번만 확인합니다.</p>
@@ -219,7 +221,7 @@ async function homePage(){
   const {data:own}=await sb.from('memorials').select('id,name,title,birth_date,death_date,visibility,updated_at').eq('owner_id',uid).order('updated_at',{ascending:false});
   const {data:mem}=await sb.from('memorial_members').select('memorial_id,memorials(id,name,title,birth_date,death_date,visibility)').eq('user_id',uid);
   const list=[...(own||[]),...((mem||[]).map(x=>x.memorials).filter(Boolean))];
-  $('#main').innerHTML=`<div class="card hero-login" style="padding:40px 24px">${CROSS}<h1 style="margin-bottom:8px">사랑하는 분의 추모관을 만들어 드립니다</h1>
+  $('#main').innerHTML=`<div class="card hero-login" style="padding:40px 24px">${MARK}<h1 style="margin-bottom:8px">사랑하는 분의 추모관을 만들어 드립니다</h1>
     <p class="muted" style="max-width:44ch;margin:0 auto 22px">성함과 사진만으로 시작할 수 있습니다. 부고장이 있으면 올려서 한 번에 채울 수도 있습니다.</p>
     <div class="row" style="justify-content:center"><a class="btn" href="#new" style="padding:15px 36px;font-size:17px">추모관 만들기</a><a class="btn ghost" href="#new" onclick="try{sessionStorage.setItem('memTab','5')}catch{}" style="padding:15px 30px;font-size:17px">모바일 부고장 바로 만들기</a></div></div>
    <h2 style="margin:28px 0 14px">내 추모관</h2>
@@ -254,39 +256,40 @@ async function editInfo(m){
   const html=`<div class="card"><h2>${isNew?(obitMode?'모바일 부고장 만들기':'추모관 만들기'):'기본 정보'}</h2>
    ${guest?`<div class="notice" style="margin-bottom:14px">로그인 없이 먼저 작성하세요. 맨 아래 <b>${obitMode?'부고장 만들기':'만들기'}</b>를 누를 때 카카오로 한 번만 확인하면, 쓰신 내용이 그대로 저장됩니다.</div>`:''}
    ${cfg.aiEnabled&&!guest?`<details class="opt"${isNew?'':''}><summary>부고장이 있으신가요? 올리면 아래 칸을 자동으로 채워 드립니다 (선택)</summary>
-    <p class="muted" style="margin:6px 0 10px">부고장 사진이나 PDF를 올리면 성함·직분·날짜·상주·장례 일정을 아래 칸에 채워 드립니다. 저장 전에 꼭 확인해 주세요. 부고장 파일은 보관하지 않습니다.</p>
+    <p class="muted" style="margin:6px 0 10px">부고장 사진이나 PDF를 올리면 성함·호칭·날짜·상주·장례 일정을 아래 칸에 채워 드립니다. 저장 전에 꼭 확인해 주세요. 부고장 파일은 보관하지 않습니다.</p>
     <div class="row" style="margin-top:4px"><input id="f-obit" type="file" accept="image/*,application/pdf" style="flex:1;min-width:220px"><button type="button" class="btn" id="obit-apply" disabled>적용하기</button></div><div id="obit-msg" class="muted" style="margin-top:8px"></div></details>`:''}
    <div class="grid2">
     <div><label for="f-name">성함 *</label><input id="f-name" value="${esc(m.name)}" maxlength="40"></div>
-    <div><label for="f-title">직분·호칭</label><input id="f-title" value="${esc(m.title)}" placeholder="예: 권사, 장로, 성도"></div>
-    <div><label for="f-death">${obitMode?'별세(소천)하신 날':'소천하신 날 (모르시면 비워 두셔도 됩니다)'}</label><input id="f-death" type="date" value="${esc(m.death_date)}"></div>
+    <div><label for="f-title" id="l-title">호칭 (선택)</label><input id="f-title" value="${esc(m.title)}" placeholder="예: 여사, 선생님"></div>
+    <div><label for="f-death" id="l-death">돌아가신 날${obitMode?'':' (모르시면 비워 두셔도 됩니다)'}</label><input id="f-death" type="date" value="${esc(m.death_date)}"></div>
     <div><label for="f-birth">태어나신 날</label><input id="f-birth" type="date" value="${esc(m.birth_date)}"></div>
    </div>
    ${obitMode&&isNew?`<label for="f-mourn">상주·유족</label><textarea id="f-mourn" style="min-height:60px" placeholder="예: 장남 홍길동&#10;장녀 홍길순">${esc(m.chief_mourners)}</textarea>
    <label for="f-funeral">빈소·발인·장지</label><textarea id="f-funeral" style="min-height:70px" placeholder="예: 춘천○○장례식장 3호실&#10;발인 11월 4일 오전 8시 / 장지 ○○추모공원">${esc(m.funeral_info)}</textarea>`:''}
-   <details class="opt"${(!isNew&&(m.hometown||m.hymn||m.verse||m.intro))?' open':''}><summary>${obitMode&&isNew?'추모관에 더 남기기 (선택 · 나중에 써도 됩니다)':'고향·찬송·말씀·소개 (선택)'}</summary>
-   <div class="grid2">
-    <div><label for="f-home">고향</label><input id="f-home" value="${esc(m.hometown)}"></div>
-    <div><label for="f-hymn">애송 찬송</label><input id="f-hymn" value="${esc(m.hymn)}"></div>
-   </div>
-   <label for="f-verse">좋아하시는 말씀</label><textarea id="f-verse" style="min-height:60px">${esc(m.verse)}</textarea>
-   <label for="f-vref">말씀 출처</label><input id="f-vref" value="${esc(m.verse_ref)}" placeholder="예: 디모데후서 4:7">
+   <details class="opt"${(!isNew&&(m.hometown||m.hymn||m.verse||m.intro||isChr(m)))?' open':''}><summary>${obitMode&&isNew?'추모관에 더 남기기 (선택 · 나중에 써도 됩니다)':'고향·소개 등 더 적기 (선택)'}</summary>
+   <label for="f-home">고향</label><input id="f-home" value="${esc(m.hometown)}">
+   <label style="display:flex;gap:8px;align-items:center;color:var(--ink);margin-top:16px"><input type="checkbox" id="f-faith" style="width:auto" ${isChr(m)?'checked':''}> 기독교인이셨어요 <span class="muted" style="font-size:13px">(체크하면 신앙 관련 항목을 더 적을 수 있습니다)</span></label>
+   <div id="chr-only" ${isChr(m)?'':'hidden'} style="border-left:2px solid var(--hair);padding-left:14px;margin-top:6px">
+   <label for="f-hymn">애송 찬송</label><input id="f-hymn" value="${esc(m.hymn)}">
+   <label for="f-verse">좋아하시는 성경 말씀</label><textarea id="f-verse" style="min-height:60px">${esc(m.verse)}</textarea>
+   <label for="f-vref">말씀 출처</label><input id="f-vref" value="${esc(m.verse_ref)}" placeholder="예: 디모데후서 4:7"></div>
    <label for="f-intro">어떤 분이셨나요 (짧은 소개)</label><textarea id="f-intro">${esc(m.intro)}</textarea></details>
    ${obitMode&&isNew?'':`<details class="opt"${(m.chief_mourners||m.funeral_info)?' open':''}><summary>장례 정보 (선택)</summary>
    <label for="f-mourn">상주·유족</label><textarea id="f-mourn" style="min-height:60px" placeholder="예: 장남 홍길동&#10;장녀 홍길순">${esc(m.chief_mourners)}</textarea>
    <label for="f-funeral">장례 일정 (빈소·발인·장지)</label><textarea id="f-funeral" style="min-height:60px">${esc(m.funeral_info)}</textarea></details>`}
    <label for="f-vis">공개 범위</label><select id="f-vis">${Object.entries(VIS).map(([k,v])=>`<option value="${k}" ${m.visibility===k?'selected':''}>${v}</option>`).join('')}</select>
    <label for="f-portrait">영정·대표 사진</label><input id="f-portrait" type="file" accept="image/*">
-   ${isNew?`<p class="muted" style="font-size:13px;margin-top:14px">아래 버튼을 누르면, 가족으로서 이 기록을 남기고 교회 디지털 추모관에 보관하는 데 동의하시는 것입니다. 언제든 내려받거나 삭제를 요청하실 수 있습니다.</p>`:''}
+   ${isNew?`<p class="muted" style="font-size:13px;margin-top:14px">아래 버튼을 누르면, 가족으로서 이 기록을 남기고 디지털 추모관에 보관하는 데 동의하시는 것입니다. 언제든 내려받거나 삭제를 요청하실 수 있습니다.</p>`:''}
    <div class="row" style="margin-top:16px"><button class="btn" id="save">${isNew?(guest?(obitMode?'카카오로 확인하고 부고장 만들기':'카카오로 확인하고 만들기'):(obitMode?'부고장 만들기':'만들기')):'저장'}</button>${isNew?'<a class="btn ghost" href="#">취소</a>':''}</div></div>`;
+  const wireFaith=()=>{const c=$('#f-faith');if(!c)return;const f=()=>{const on=c.checked;$('#chr-only').hidden=!on;$('#l-title').textContent=on?'직분·호칭 (선택)':'호칭 (선택)';$('#f-title').placeholder=on?'예: 권사, 장로, 집사':'예: 여사, 선생님';$('#l-death').textContent=(on?'소천하신 날':'돌아가신 날')+(obitMode?'':' (모르시면 비워 두셔도 됩니다)')};c.onchange=f;f()};
   if(isNew){$('#main').innerHTML=html;trk(obitMode?'form_open_obit':'form_open')}else $('#tab').innerHTML=html;
-  const ob=$('#f-obit'),oa=$('#obit-apply');if(ob){ob.onchange=()=>{oa.disabled=!ob.files[0];$('#obit-msg').textContent=ob.files[0]?'파일을 골랐습니다. 적용하기를 눌러 주세요.':''};oa.onclick=async()=>{oa.disabled=true;oa.textContent='읽는 중…';await readObit(ob.files[0]);oa.textContent='적용하기';oa.disabled=false}}
+  wireFaith();const ob=$('#f-obit'),oa=$('#obit-apply');if(ob){ob.onchange=()=>{oa.disabled=!ob.files[0];$('#obit-msg').textContent=ob.files[0]?'파일을 골랐습니다. 적용하기를 눌러 주세요.':''};oa.onclick=async()=>{oa.disabled=true;oa.textContent='읽는 중…';await readObit(ob.files[0]);oa.textContent='적용하기';oa.disabled=false}}
   $('#save').onclick=async()=>{
     const name=$('#f-name').value.trim();if(!name){trk('save_noname');$('#f-name').focus();$('#f-name').scrollIntoView({block:'center'});return toast('성함을 입력해 주세요.')}
     if(isNew)trk(guest?'save_click_guest':'save_click');
     const row={name,title:$('#f-title').value.trim()||null,birth_date:$('#f-birth').value||null,death_date:$('#f-death').value||null,
       hometown:$('#f-home').value.trim()||null,hymn:$('#f-hymn').value.trim()||null,verse:$('#f-verse').value.trim()||null,
-      verse_ref:$('#f-vref').value.trim()||null,intro:$('#f-intro').value.trim()||null,chief_mourners:$('#f-mourn').value.trim()||null,funeral_info:$('#f-funeral').value.trim()||null,visibility:$('#f-vis').value,updated_at:new Date().toISOString()};
+      verse_ref:$('#f-vref').value.trim()||null,intro:$('#f-intro').value.trim()||null,chief_mourners:$('#f-mourn').value.trim()||null,funeral_info:$('#f-funeral').value.trim()||null,faith:$('#f-faith')?.checked?'christian':'general',visibility:$('#f-vis').value,updated_at:new Date().toISOString()};
     if(guest){
       const f=$('#f-portrait').files[0];let portrait=null;
       if(f){try{const {blob}=await shrinkForUpload(f,1200);portrait=await new Promise(ok=>{const r=new FileReader();r.onload=()=>ok(r.result);r.readAsDataURL(blob)})}catch{}}
@@ -347,10 +350,10 @@ let mediaRec=null, chunks=[], recStart=0;
 async function tabRec(m){
   const {data:recs}=await sb.from('recordings').select('*').eq('memorial_id',m.id).order('created_at');
   const done=new Set((recs||[]).map(r=>r.question));
-  const next=QUESTIONS.find(q=>!done.has(q))||'';
+  const QS=qsFor(m);const next=QS.find(q=>!done.has(q))||'';
   $('#tab').innerHTML=`<div class="card"><h2>질문에 말로 답하기</h2>
     <p class="muted">질문을 고르고 녹음 버튼을 누른 뒤 편하게 이야기하세요. 휴대폰 녹음 파일을 올려도 됩니다.</p>
-    <label for="q">질문</label><select id="q">${QUESTIONS.map(q=>`<option ${q===next?'selected':''}>${esc(q)}</option>`).join('')}<option value="__custom">직접 질문 쓰기…</option></select>
+    <label for="q">질문</label><select id="q">${QS.map(q=>`<option ${q===next?'selected':''}>${esc(q)}</option>`).join('')}<option value="__custom">직접 질문 쓰기…</option></select>
     <input id="qc" placeholder="질문을 입력하세요" hidden style="margin-top:8px">
     <div class="row" style="margin-top:14px"><button class="btn" id="recBtn">● 녹음 시작</button><span id="recState" class="muted"></span>
       <label class="btn ghost" style="margin:0;color:var(--accent)">파일 올리기<input type="file" id="upAudio" accept="audio/*" hidden></label></div></div>
@@ -414,16 +417,16 @@ async function tabChapters(m){
 }
 
 async function tabObit(m){
-  const link=`https://chunchurch.com/b/${m.id}`;const christian=(m.obit_style||'christian')!=='general';
+  const link=`https://chunchurch.com/b/${m.id}`;const christian=(m.obit_style||(isChr(m)?'christian':'general'))!=='general';
   $('#tab').innerHTML=`<div class="card"><h2>모바일 부고장</h2><p class="muted">카카오톡·문자로 보낼 수 있는 부고장입니다. 링크를 받은 분은 <b>로그인 없이</b> 볼 수 있고, 추모관의 사진·추억은 공개 범위대로 보호됩니다.</p>
    ${m.obit_enabled?`<div class="notice" style="margin:12px 0"><b>부고장이 공개되어 있습니다.</b><div style="word-break:break-all;margin:6px 0">${link}</div>
      <div class="row"><button class="btn small" id="ob-share">카카오톡·문자로 보내기</button><button class="btn small ghost" id="ob-copy">링크 복사</button><a class="btn small ghost" href="${link}" target="_blank" rel="noopener">부고장 미리보기</a></div></div>`:''}
-   <label for="ob-style">문구 형식</label><select id="ob-style"><option value="christian" ${christian?'selected':''}>기독교식 (소천)</option><option value="general" ${!christian?'selected':''}>일반 (별세)</option></select>
-   <div class="grid2"><div><label>고인 성함 · 직분</label><input value="${esc(m.name)} ${esc(m.title||'')}" disabled></div><div><label for="ob-death">소천(별세)하신 날</label><input id="ob-death" type="date" value="${esc(m.death_date)}"></div></div>
-   <label for="ob-msg">알리는 글 (비워 두면 자동으로 만들어집니다)</label><textarea id="ob-msg" placeholder="故 ${esc(m.name)}님께서 하나님의 부르심을 받아 소천하셨기에 삼가 알려 드립니다.">${esc(m.obit_message)}</textarea>
+   <label for="ob-style">문구 형식</label><select id="ob-style"><option value="general" ${!christian?'selected':''}>일반 (별세)</option><option value="christian" ${christian?'selected':''}>기독교식 (소천)</option></select>
+   <div class="grid2"><div><label>고인 성함 · 호칭</label><input value="${esc(m.name)} ${esc(m.title||'')}" disabled></div><div><label for="ob-death">${christian?'소천하신 날':'별세하신 날'}</label><input id="ob-death" type="date" value="${esc(m.death_date)}"></div></div>
+   <label for="ob-msg">알리는 글 (비워 두면 자동으로 만들어집니다)</label><textarea id="ob-msg" placeholder="${christian?`故 ${esc(m.name)}님께서 하나님의 부르심을 받아 소천하셨기에 삼가 알려 드립니다.`:`故 ${esc(m.name)}님께서 별세하셨기에 삼가 알려 드립니다.`}">${esc(m.obit_message)}</textarea>
    <label for="ob-mourn">상주 · 유족</label><textarea id="ob-mourn" style="min-height:70px" placeholder="장남 홍길동&#10;장녀 홍길순">${esc(m.chief_mourners)}</textarea>
    <label for="ob-place">빈소 (장례식장 이름과 호실, 주소)</label><input id="ob-place" value="${esc(m.obit_place)}" placeholder="예: 춘천장례식장 특1호실">
-   <label for="ob-fun">장례 일정</label><textarea id="ob-fun" style="min-height:70px" placeholder="입관: 11월 1일 오후 2시&#10;발인(장례예배): 11월 2일 오전 7시&#10;장지: 홍천 선산">${esc(m.funeral_info)}</textarea>
+   <label for="ob-fun">장례 일정</label><textarea id="ob-fun" style="min-height:70px" placeholder="입관: 11월 1일 오후 2시&#10;발인: 11월 2일 오전 7시&#10;장지: 홍천 선산">${esc(m.funeral_info)}</textarea>
    <label for="ob-contact">연락처 (선택)</label><input id="ob-contact" value="${esc(m.obit_contact)}" placeholder="예: 상주 홍길동 010-1234-5678">
    <label for="ob-acc">마음 전하실 곳 (선택)</label><input id="ob-acc" value="${esc(m.obit_account)}" placeholder="예: 농협 000-0000-0000 홍길동">
    <label style="display:flex;gap:8px;align-items:center;color:var(--ink)"><input type="checkbox" id="ob-por" style="width:auto" ${m.obit_portrait||(!m.obit_enabled&&m.portrait_path)?'checked':''} ${m.portrait_path?'':'disabled'}> 영정 사진을 부고장에 표시 ${m.portrait_path?'':'<span class="muted">(먼저 맨 위에서 영정 사진을 올려 주세요)</span>'}</label>
@@ -432,7 +435,7 @@ async function tabObit(m){
   if($('#ob-share'))$('#ob-share').onclick=share;
   if($('#ob-copy'))$('#ob-copy').onclick=()=>navigator.clipboard.writeText(link).then(()=>toast('링크를 복사했습니다.'),()=>prompt('복사해 주세요',link));
   if($('#ob-off'))$('#ob-off').onclick=async()=>{if(!confirm('부고장을 닫으면 링크로 볼 수 없게 됩니다. 닫을까요?'))return;await sb.from('memorials').update({obit_enabled:false}).eq('id',m.id);const {data}=await sb.from('memorials').select('*').eq('id',m.id).single();tabObit(data)};
-  $('#ob-save').onclick=async()=>{const b=$('#ob-save');if(!$('#ob-death').value&&!confirm('소천(별세)하신 날이 비어 있습니다. 그대로 만들까요?'))return;b.disabled=true;b.textContent='저장하는 중…';
+  $('#ob-save').onclick=async()=>{const b=$('#ob-save');if(!$('#ob-death').value&&!confirm('돌아가신 날이 비어 있습니다. 그대로 만들까요?'))return;b.disabled=true;b.textContent='저장하는 중…';
     try{const u={obit_enabled:true,obit_style:$('#ob-style').value,obit_message:$('#ob-msg').value.trim()||null,chief_mourners:$('#ob-mourn').value.trim()||null,obit_place:$('#ob-place').value.trim()||null,
       funeral_info:$('#ob-fun').value.trim()||null,obit_contact:$('#ob-contact').value.trim()||null,obit_account:$('#ob-acc').value.trim()||null,death_date:$('#ob-death').value||null};
       if($('#ob-por').checked&&m.portrait_path){const r=await fetch(await signed(m.portrait_path));const blob=await r.blob();const p=`${m.id}/portrait-${Date.now()}.jpg`;
@@ -443,10 +446,10 @@ async function tabObit(m){
     catch(e){b.disabled=false;b.textContent='다시 시도';alert('저장하지 못했습니다: '+e.message)}};
 }
 async function comfortPage(mid){
-  if(!session){$('#main').innerHTML=`<div class="card hero-login">${CROSS}<h1 style="font-size:24px">위로의 말 남기기</h1><p class="muted">남기신 분을 확인하기 위해 카카오 로그인이 필요합니다.</p><button class="btn kakao" id="kakao">카카오로 로그인</button><p class="muted" style="margin-top:16px"><a href="/b/${mid}">← 부고장으로 돌아가기</a></p></div>`;
+  if(!session){$('#main').innerHTML=`<div class="card hero-login">${MARK}<h1 style="font-size:24px">위로의 말 남기기</h1><p class="muted">남기신 분을 확인하기 위해 카카오 로그인이 필요합니다.</p><button class="btn kakao" id="kakao">카카오로 로그인</button><p class="muted" style="margin-top:16px"><a href="/b/${mid}">← 부고장으로 돌아가기</a></p></div>`;
     $('#kakao').onclick=()=>sb.auth.signInWithOAuth({provider:'kakao',options:{redirectTo:location.href}});return}
   $('#main').innerHTML=`<div class="card"><h2>위로의 말 남기기</h2><p class="muted">유가족께 전하는 마음은 부고장과 추모관에 함께 남습니다.</p>
-   <label for="cn">이름</label><input id="cn" maxlength="20" value="${esc(session.user.user_metadata?.name||'')}"><label for="cb">위로의 말</label><textarea id="cb" maxlength="1000" placeholder="삼가 고인의 명복을 빕니다. 유가족 여러분께 주님의 위로가 함께하시길 기도합니다."></textarea>
+   <label for="cn">이름</label><input id="cn" maxlength="20" value="${esc(session.user.user_metadata?.name||'')}"><label for="cb">위로의 말</label><textarea id="cb" maxlength="1000" placeholder="삼가 고인의 명복을 빕니다. 유가족 여러분께 깊은 위로를 전합니다."></textarea>
    <div class="row" style="margin-top:14px"><button class="btn" id="cs">마음 남기기</button><a class="btn ghost" href="/b/${mid}">취소</a></div></div>`;
   $('#cs').onclick=async()=>{const body=$('#cb').value.trim();if(!body)return alert('위로의 말을 적어 주세요.');$('#cs').disabled=true;
     const {error}=await sb.rpc('post_comfort',{mid,aname:$('#cn').value,abody:body});if(error){$('#cs').disabled=false;return alert('남기지 못했습니다: '+error.message)}
@@ -454,7 +457,7 @@ async function comfortPage(mid){
 }
 async function tabSayings(m){
   const {data:ss}=await sb.from('sayings').select('*').eq('memorial_id',m.id).order('sort');
-  $('#tab').innerHTML=`<div class="card"><h2>남기신 말씀</h2><p class="muted">평소 가족에게 자주 하시던 말씀, 당부, 기도를 적어 주세요. 추모관에 인용구로 모셔집니다.</p>
+  $('#tab').innerHTML=`<div class="card"><h2>남기신 말씀</h2><p class="muted">평소 가족에게 자주 하시던 말씀과 당부를 적어 주세요. 추모관에 인용구로 모셔집니다.</p>
     <button class="btn" id="addSay">+ 말씀 추가</button></div><div id="sayList"></div>`;
   $('#addSay').onclick=async()=>{const {error}=await sb.from('sayings').insert({memorial_id:m.id,body:'',sort:(ss?.length||0)*10});if(error)return toast(error.message);tabSayings(m)};
   for(const x of ss||[]){const d=document.createElement('div');d.className='card';
@@ -534,16 +537,16 @@ async function viewPage(id){
   const age=m.birth_date&&m.death_date?Math.floor((new Date(m.death_date)-new Date(m.birth_date))/31557600000):null;
   const yrs=d=>d?d.split('-')[0]:'';
   let canEdit=false;if(session){if(m.owner_id===session.user.id)canEdit=true;else{const {data:mm}=await sb.from('memorial_members').select('role').eq('memorial_id',id).eq('user_id',session.user.id).maybeSingle();canEdit=mm?.role==='editor'}}
-  $('#main').innerHTML=`${canEdit?`<div class="row" style="justify-content:flex-end;margin-bottom:12px"><a class="btn ghost small" href="#">← 내 추모관 목록</a><a class="btn small" href="#edit-${id}">✎ 이 추모관 편집하기</a></div>`:''}<div class="room">${['tl','tr','bl','br'].map(k=>CORNER.replace('%s',k)).join('')}${LINTEL.replace('%s','lintel')}<section class="memorial">${CROSS}
-     <div class="niche" style="position:relative"><div class="frame${portrait?'':' empty'}">${portrait?`<img class="portrait" src="${esc(portrait)}" alt="${esc(m.name)} 님 영정">`:'<div class="portrait">'+CROSS+'</div>'}</div>${canEdit?`<div style="margin-top:12px"><button class="btn small${portrait?' ghost':''}" id="setPortrait">${portrait?'영정 사진 바꾸기':'＋ 영정 사진 올리기'}</button></div>`:''}</div>
+  $('#main').innerHTML=`${canEdit?`<div class="row" style="justify-content:flex-end;margin-bottom:12px"><a class="btn ghost small" href="#">← 내 추모관 목록</a><a class="btn small" href="#edit-${id}">✎ 이 추모관 편집하기</a></div>`:''}<div class="room">${['tl','tr','bl','br'].map(k=>CORNER.replace('%s',k)).join('')}${LINTEL.replace('%s','lintel')}<section class="memorial">${isChr(m)?CROSS:MARK}
+     <div class="niche" style="position:relative"><div class="frame${portrait?'':' empty'}">${portrait?`<img class="portrait" src="${esc(portrait)}" alt="${esc(m.name)} 님 영정">`:'<div class="portrait">'+(isChr(m)?CROSS:MARK)+'</div>'}</div>${canEdit?`<div style="margin-top:12px"><button class="btn small${portrait?' ghost':''}" id="setPortrait">${portrait?'영정 사진 바꾸기':'＋ 영정 사진 올리기'}</button></div>`:''}</div>
      <div class="eyebrow">${m.death_date?'추 모':'생 애 의 기 록'}</div>
      <h1>${esc(m.name)}${m.title?`<small>${esc(m.title)}</small>`:''}</h1>
      <div class="dates">${fmtDate(m.birth_date)}${m.death_date?' — '+fmtDate(m.death_date):''}${age?` · 향년 ${age}세`:''}</div>
      ${m.hometown?`<div class="muted" style="margin-top:4px">${esc(m.hometown)}</div>`:''}
-     ${m.death_date?'<div class="rest">주님의 품 안에서 평안히 쉬고 계십니다</div>':''}
-     ${m.verse?`<blockquote class="verse">${esc(m.verse)}${m.verse_ref?`<cite>${esc(m.verse_ref)}</cite>`:''}</blockquote>`:''}
+     ${m.death_date?`<div class="rest">${isChr(m)?'주님의 품 안에서 평안히 쉬고 계십니다':'평안히 잠드셨습니다'}</div>`:''}
+     ${isChr(m)&&m.verse?`<blockquote class="verse">${esc(m.verse)}${m.verse_ref?`<cite>${esc(m.verse_ref)}</cite>`:''}</blockquote>`:''}
      ${m.intro?`<p class="intro">${esc(m.intro).replace(/\n/g,'<br>')}</p>`:''}
-     ${(m.hymn||m.chief_mourners||m.funeral_info)?`<div class="facts">${m.hymn?`<div><b>애송 찬송</b>${esc(m.hymn)}</div>`:''}${m.chief_mourners?`<div><b>상주 · 유족</b>${esc(m.chief_mourners)}</div>`:''}${m.funeral_info?`<div><b>장례 일정</b>${esc(m.funeral_info)}</div>`:''}</div>`:''}
+     ${((isChr(m)&&m.hymn)||m.chief_mourners||m.funeral_info)?`<div class="facts">${isChr(m)&&m.hymn?`<div><b>애송 찬송</b>${esc(m.hymn)}</div>`:''}${m.chief_mourners?`<div><b>상주 · 유족</b>${esc(m.chief_mourners)}</div>`:''}${m.funeral_info?`<div><b>장례 일정</b>${esc(m.funeral_info)}</div>`:''}</div>`:''}
    </section>
    <div class="sec"><h2>생애</h2></div>${(chs||[]).length?'<div id="chs" class="timeline"></div>':(canEdit?emptyBox('아직 확인을 마친 생애의 장이 없습니다.',1,id):'<p class="muted" style="text-align:center">아직 공개된 이야기가 없습니다.</p>')+'<div id="chs" hidden></div>'}
    ${!(ss||[]).filter(x=>x.body).length&&canEdit?`<div class="sec"><h2>남기신 말씀</h2><p class="muted">가족에게 늘 하시던 말씀</p></div>${emptyBox('평소 하시던 말씀을 남겨 보세요.',2,id)}`:''}${(ss||[]).filter(x=>x.body).length?`<div class="sec"><h2>남기신 말씀</h2><p class="muted">가족에게 늘 하시던 말씀</p></div><div class="sayings">${ss.filter(x=>x.body).map(x=>`<div class="saying"><p>${esc(x.body).replace(/\n/g,'<br>')}</p>${x.context?`<div class="ctx">— ${esc(x.context)}</div>`:''}</div>`).join('')}</div>`:''}
